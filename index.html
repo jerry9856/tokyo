@@ -770,11 +770,53 @@
             font-family: monospace;
             pointer-events: none;
         }
+
+        /* Jump to Now Button */
+        .jump-to-now-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: #C53030;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(197, 48, 48, 0.3);
+            border: none;
+            cursor: pointer;
+            z-index: 90;
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .jump-to-now-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .jump-to-now-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(197, 48, 48, 0.4);
+        }
     </style>
 </head>
 
 <body>
-    <div class="version-tag">v.2025.11.19.1454</div>
+    <div class="version-tag">v.2025.11.19.1459</div>
+
+    <button class="jump-to-now-btn" aria-label="Jump to current event">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+    </button>
 
     <!-- Navigation -->
     <nav class="sticky-nav">
@@ -1545,6 +1587,7 @@
             const currentMonth = now.getMonth() + 1;
             const currentDay = now.getDate();
             const currentYear = now.getFullYear();
+            let hasCurrent = false;
 
             document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('current'));
 
@@ -1585,14 +1628,32 @@
 
                     if (activeItem) {
                         activeItem.classList.add('current');
+                        hasCurrent = true;
                     }
                 }
             });
+
+            const jumpBtn = document.querySelector('.jump-to-now-btn');
+            if (jumpBtn) {
+                if (hasCurrent) {
+                    jumpBtn.classList.add('visible');
+                } else {
+                    jumpBtn.classList.remove('visible');
+                }
+            }
         };
 
         // Update every minute
         setInterval(updateCurrentTime, 60000);
         updateCurrentTime();
+
+        // Jump Button Click Handler
+        document.querySelector('.jump-to-now-btn').addEventListener('click', () => {
+            const currentItem = document.querySelector('.timeline-item.current');
+            if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            }
+        });
     </script>
 </body>
 
