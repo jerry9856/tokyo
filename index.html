@@ -4,30 +4,52 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>東京 6 日</title>
+    <title>東京 6 日 | Winter Escape</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
         rel="stylesheet" />
     <style>
         :root {
+            /* Original Palette */
             --text: #000000;
             --accent: #4A2F1E;
             --sand: #D9CFC7;
             --shell: #EFE9E3;
             --linen: #F9F8F6;
+
+            /* Derived Colors */
+            --accent-light: rgba(74, 47, 30, 0.05);
+            --accent-medium: rgba(74, 47, 30, 0.1);
+            --white: #FFFFFF;
+            --shadow-sm: 0 2px 8px rgba(74, 47, 30, 0.04);
+            --shadow-md: 0 8px 24px rgba(74, 47, 30, 0.08);
+            --shadow-lg: 0 16px 48px rgba(74, 47, 30, 0.12);
         }
 
-        * {
+        /* Reset & Base */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            margin: 0;
             font-family: 'Noto Sans TC', sans-serif;
-            background: var(--linen);
+            background-color: var(--linen);
+            background-image:
+                linear-gradient(to bottom, var(--linen) 0%, var(--shell) 100%);
+            background-attachment: fixed;
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 80px;
         }
 
         img {
@@ -36,682 +58,1160 @@
         }
 
         a {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 2px 10px;
-            border: 1px solid var(--sand);
-            border-radius: 999px;
             color: var(--accent);
             text-decoration: none;
-            transition: background 0.2s ease, border-color 0.2s ease;
-            vertical-align: baseline;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        a:hover {
-            background: var(--shell);
-            border-color: var(--accent);
+        /* Typography System */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--accent);
+            line-height: 1.3;
+            font-weight: 700;
         }
 
-        .book {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 48px 24px 96px;
-        }
-
-        header.hero {
-            background: var(--shell);
-            border: 1px solid var(--sand);
-            border-radius: 32px;
-            padding: 48px;
-            text-align: left;
-        }
-
-        .hero .label {
-            letter-spacing: 0.2em;
+        .text-label {
+            font-size: 0.85rem;
             text-transform: uppercase;
-            font-size: 13px;
-            margin-bottom: 12px;
+            letter-spacing: 0.15em;
             color: var(--accent);
+            opacity: 0.8;
+            font-weight: 500;
         }
 
-        .hero h1 {
-            margin: 0 0 12px;
-            font-size: 42px;
-            line-height: 1.2;
-            color: var(--accent);
+        .text-body {
+            font-size: 1rem;
+            color: var(--text);
         }
 
-        .hero .subtitle {
-            margin: 0 0 24px;
-            font-size: 18px;
+        .text-sm {
+            font-size: 0.9rem;
         }
 
-        .hero-info {
+        /* Layout Containers */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-spacer {
+            padding: 80px 0;
+        }
+
+        /* Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+            pointer-events: none;
+            /* Let clicks pass through around the pill */
         }
 
-        .date-pill {
-            align-self: flex-start;
-            padding: 6px 18px;
+        .nav-pill {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 8px 8px;
             border-radius: 999px;
+            border: 1px solid var(--sand);
+            display: flex;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-item {
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--accent);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--accent-light);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 24px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--shell) 0%, transparent 70%);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
             border: 1px solid var(--accent);
+            border-radius: 999px;
+            font-size: 0.85rem;
             font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
             color: var(--accent);
         }
 
-        section {
-            margin-top: 56px;
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-weight: 400;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 48px;
+            text-align: center;
         }
 
         .section-title {
-            font-size: 28px;
-            margin-bottom: 24px;
-            border-left: 6px solid var(--accent);
-            padding-left: 16px;
-            color: var(--accent);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            position: relative;
+            display: inline-block;
         }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 16px auto 0;
+            border-radius: 2px;
+            opacity: 0.3;
         }
 
+        /* Cards Generic */
         .card {
-            background: var(--shell);
+            background: var(--white);
             border: 1px solid var(--sand);
             border-radius: 24px;
-            padding: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .card h3 {
-            margin-top: 0;
-            margin-bottom: 12px;
-            font-size: 20px;
-            color: var(--accent);
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
 
-        .card ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-
-        .card ul li+li {
-            margin-top: 8px;
-        }
-
+        /* Flight Cards (Boarding Pass Style) */
         .flight-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 24px;
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 20px 24px 40px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .flight-grid::-webkit-scrollbar {
+            display: none;
         }
 
         .flight-card {
-            background: var(--linen);
-            border: 1px solid var(--sand);
+            flex: 0 0 400px;
+            scroll-snap-align: center;
+            background: var(--white);
             border-radius: 24px;
-            padding: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--sand);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-md);
         }
 
-        .flight-card h4 {
-            margin: 0 0 12px;
-            font-size: 22px;
+        .flight-header {
+            background: var(--accent);
+            color: var(--white);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flight-type {
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .flight-code {
+            font-family: monospace;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .flight-body {
+            padding: 24px;
+            display: grid;
+            gap: 24px;
+        }
+
+        .flight-route {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .airport-code {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .airport-time {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .flight-divider {
+            flex: 1;
+            height: 2px;
+            background: var(--sand);
+            margin: 0 16px;
+            position: relative;
+        }
+
+        .flight-divider::after {
+            content: '✈';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            background: var(--white);
+            padding: 0 8px;
+            color: var(--sand);
+            font-size: 14px;
+        }
+
+        .flight-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--sand);
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .detail-item span {
+            font-weight: 600;
             color: var(--accent);
         }
 
-        dl {
-            margin: 0;
+        /* Stay Cards */
+        .stay-grid {
             display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 8px 12px;
-            font-size: 15px;
-        }
-
-        dl dt {
-            font-weight: 600;
-        }
-
-        dl dd {
-            margin: 0;
-        }
-
-        .note {
-            border: 1px dashed var(--accent);
-            border-radius: 20px;
-            padding: 16px 20px;
-            background: var(--linen);
-            font-size: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
         }
 
         .stay-card {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            height: 100%;
         }
 
-        .stay-card a {
-            align-self: flex-start;
-            font-weight: 600;
-            padding: 6px 18px;
+        .stay-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
         }
 
-        .day-carousel {
-            position: relative;
+        .stay-info {
+            margin-bottom: 24px;
+            flex-grow: 1;
         }
 
-        .day-carousel-hint {
-            font-size: 14px;
-            color: var(--accent);
-            margin-bottom: 16px;
-            opacity: 0.8;
-        }
-
-        .days-grid {
+        .stay-info p {
             display: flex;
-            flex-wrap: nowrap;
-            gap: 24px;
-            margin: 0 -12px;
-            padding: 0 12px 16px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-padding: 12px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: var(--sand) transparent;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
-        .days-grid::-webkit-scrollbar {
-            height: 6px;
+        .stay-action {
+            margin-top: auto;
         }
 
-        .days-grid::-webkit-scrollbar-track {
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--accent);
+            color: var(--accent);
             background: transparent;
         }
 
-        .days-grid::-webkit-scrollbar-thumb {
-            background: var(--sand);
-            border-radius: 999px;
+        .btn-outline:hover {
+            background: var(--accent);
+            color: var(--white);
         }
 
-        .scroll-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(239, 233, 227, 0.9);
-            color: var(--accent);
+        /* Itinerary Carousel */
+        .carousel-container {
+            position: relative;
+            padding: 0 0 40px;
+        }
+
+        .days-track {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            gap: 32px;
+            overflow-x: auto;
+            padding: 20px 24px 40px;
+            /* Bottom padding for shadow */
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            /* Firefox */
         }
 
-        .scroll-arrow--left {
-            left: 4px;
-        }
-
-        .scroll-arrow--right {
-            right: 4px;
-        }
-
-        .day-carousel.show-arrows .scroll-arrow {
-            opacity: 0.65;
+        .days-track::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
         }
 
         .day-card {
+            flex: 0 0 400px;
+            scroll-snap-align: center;
+            background: var(--white);
             border: 1px solid var(--sand);
-            border-radius: 28px;
-            padding: 32px;
-            background: var(--linen);
-            flex: 0 0 calc(50% - 12px);
-            min-width: 320px;
-            scroll-snap-align: start;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-        }
-
-        .day-card header {
+            border-radius: 32px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
+            flex-direction: column;
         }
 
-        .day-card header h3 {
-            margin: 0;
-            font-size: 24px;
-            color: var(--accent);
-        }
-
-        .day-badge {
-            padding: 6px 18px;
-            border-radius: 999px;
+        .day-header {
             background: var(--shell);
-            border: 1px solid var(--sand);
+            padding: 32px 32px 24px;
+            border-bottom: 1px solid var(--sand);
+            position: relative;
+        }
+
+        .day-number {
+            font-size: 4rem;
+            font-weight: 100;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.2;
+            position: absolute;
+            top: 24px;
+            right: 24px;
+        }
+
+        .day-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--accent);
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
+        .day-title {
+            font-size: 1.75rem;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-body {
+            padding: 32px;
+            flex-grow: 1;
+            background: var(--white);
+        }
+
+        /* Timeline */
         .timeline {
             list-style: none;
-            margin: 0;
-            padding-left: 24px;
             position: relative;
+            padding-left: 28px;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            top: 4px;
-            bottom: 4px;
-            left: 6px;
+            top: 8px;
+            bottom: 0;
+            left: 7px;
             width: 2px;
             background: var(--sand);
+            opacity: 0.5;
         }
 
-        .timeline li {
+        .timeline-item {
             position: relative;
-            padding-left: 24px;
-            margin-bottom: 18px;
+            margin-bottom: 32px;
         }
 
-        .timeline li::before {
-            content: '';
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-marker {
             position: absolute;
-            left: -2px;
+            left: -28px;
             top: 6px;
-            width: 10px;
-            height: 10px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            border: 2px solid var(--accent);
             background: var(--linen);
+            border: 3px solid var(--accent);
+            z-index: 2;
         }
 
-        .timeline strong {
-            display: inline-block;
-            min-width: 68px;
+        .timeline-time {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 4px;
+            display: block;
         }
 
-        .notice {
-            border-radius: 20px;
-            padding: 16px 20px;
-            margin-top: 16px;
+        .timeline-content {
+            font-size: 1rem;
+            color: var(--text);
         }
 
-        .notice.info {
+        .timeline-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--accent);
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+        }
+
+        .timeline-link:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Notices */
+        .notice-box {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .notice-info {
             background: var(--shell);
             border: 1px solid var(--sand);
+            color: var(--accent);
         }
 
-        .notice.alert {
-            border: 2px dashed var(--accent);
-            background: var(--linen);
+        .notice-alert {
+            background: #FFF5F5;
+            border: 1px dashed #E53E3E;
+            color: #C53030;
         }
 
-        .references {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        footer {
-            margin-top: 64px;
+        /* Footer */
+        .site-footer {
             text-align: center;
-            font-size: 13px;
+            padding: 60px 24px;
+            color: var(--accent);
+            opacity: 0.6;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--sand);
+            margin-top: 80px;
         }
 
-        @media (max-width: 900px) {
-            .day-card {
-                flex: 0 0 80%;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px 40px;
             }
 
-            .scroll-arrow {
-                width: 38px;
-                height: 38px;
-                font-size: 20px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            header.hero {
-                padding: 32px;
+            .day-card,
+            .flight-card {
+                flex: 0 0 85vw;
             }
 
-            .day-card {
-                padding: 24px;
-                flex: 0 0 100%;
-                min-width: 260px;
+            .flight-route {
+                flex-direction: column;
+                gap: 16px;
             }
 
-            .scroll-arrow {
-                width: 34px;
-                height: 34px;
-                font-size: 18px;
+            .flight-divider {
+                width: 100%;
+                height: 2px;
+                margin: 16px 0;
+            }
+
+            .flight-divider::after {
+                transform: translate(-50%, -50%) rotate(180deg);
             }
         }
     </style>
 </head>
 
 <body>
-    <main class="book">
+
+    <!-- Navigation -->
+    <nav class="sticky-nav">
+        <div class="nav-pill">
+            <a href="#flights" class="nav-item">航班</a>
+            <a href="#stay" class="nav-item">住宿</a>
+            <a href="#itinerary" class="nav-item">行程</a>
+            <a href="#refs" class="nav-item">資訊</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- Hero -->
         <header class="hero">
-            <p class="label">TOKYO WINTER ESCAPE</p>
-            <h1>東京 6 日</h1>
-            <p class="subtitle">富士山 · 城市 · 迪士尼 · 燈</p>
-            <div class="hero-info">
-                <div class="date-pill">2025 / 12 / 04 — 12 / 09</div>
+            <span class="hero-badge">TOKYO WINTER ESCAPE</span>
+            <h1 class="hero-title">東京 6 日</h1>
+            <p class="hero-subtitle">富士山絕景 · 城市漫遊 · 迪士尼夢幻 · 冬日燈飾</p>
+
+            <div class="hero-meta">
+                <span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    2025 / 12 / 04 — 12 / 09
+                </span>
             </div>
         </header>
 
-        <section>
-            <h2 class="section-title">航班與交通節點</h2>
+        <!-- Flights -->
+        <section id="flights" class="section-spacer">
+            <div class="section-header">
+                <span class="text-label">TRANSPORTATION</span>
+                <h2 class="section-title">航班與交通</h2>
+            </div>
+
             <div class="flight-grid">
+                <!-- Outbound -->
                 <article class="flight-card">
-                    <h4>去程 · TR874 (酷航)</h4>
-                    <dl>
-                        <dt>日期</dt>
-                        <dd>12 / 04 (四)</dd>
-                        <dt>起飛</dt>
-                        <dd>14:00 · TPE T1</dd>
-                        <dt>抵達</dt>
-                        <dd>18:00 · NRT T1</dd>
-                        <dt>備註</dt>
-                        <dd>抵達後直奔錦糸町飯店</dd>
-                    </dl>
+                    <div class="flight-header">
+                        <span class="flight-type">去程 · OUTBOUND</span>
+                        <span class="flight-code">TR874</span>
+                    </div>
+                    <div class="flight-body">
+                        <div class="flight-route">
+                            <div class="airport">
+                                <div class="airport-code">TPE</div>
+                                <div class="airport-time">14:00</div>
+                            </div>
+                            <div class="flight-divider"></div>
+                            <div class="airport">
+                                <div class="airport-code">NRT</div>
+                                <div class="airport-time">18:00</div>
+                            </div>
+                        </div>
+                        <div class="flight-details">
+                            <div class="detail-item">
+                                <label>DATE</label>
+                                <span>12 / 04 (四)</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>AIRLINE</label>
+                                <span>Scoot 酷航</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>TERMINAL</label>
+                                <span>TPE T1 → NRT T1</span>
+                            </div>
+                        </div>
+                    </div>
                 </article>
+
+                <!-- Inbound -->
                 <article class="flight-card">
-                    <h4>回程 · GK13 (捷星)</h4>
-                    <dl>
-                        <dt>日期</dt>
-                        <dd>12 / 09 (二)</dd>
-                        <dt>起飛</dt>
-                        <dd>22:25 · NRT T3</dd>
-                        <dt>抵達</dt>
-                        <dd>12 / 10 01:50 · TPE</dd>
-                        <dt>備註</dt>
-                        <dd>18:20 從錦糸町出發前往機場</dd>
-                    </dl>
+                    <div class="flight-header">
+                        <span class="flight-type">回程 · INBOUND</span>
+                        <span class="flight-code">GK13</span>
+                    </div>
+                    <div class="flight-body">
+                        <div class="flight-route">
+                            <div class="airport">
+                                <div class="airport-code">NRT</div>
+                                <div class="airport-time">22:25</div>
+                            </div>
+                            <div class="flight-divider"></div>
+                            <div class="airport">
+                                <div class="airport-code">TPE</div>
+                                <div class="airport-time">01:50<small>+1</small></div>
+                            </div>
+                        </div>
+                        <div class="flight-details">
+                            <div class="detail-item">
+                                <label>DATE</label>
+                                <span>12 / 09 (二)</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>AIRLINE</label>
+                                <span>Jetstar 捷星</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>TERMINAL</label>
+                                <span>NRT T3 → TPE</span>
+                            </div>
+                        </div>
+                    </div>
                 </article>
             </div>
-            <div class="note">
-                成田 → 錦糸町建議方案：<br />
-                1. JR 總武線快速，無需轉乘，約 70~90 分鐘，JPY 1,340。<br />
-                2. 京成 Access 特快 + 半藏門線，轉乘一次，約 70 分鐘，JPY 1,380。
-            </div>
-        </section>
 
-        <section>
-            <h2 class="section-title">住宿安排</h2>
-            <div class="cards-grid">
-                <article class="card stay-card">
-                    <h3>東京錦糸町樂天城市飯店</h3>
-                    <p>入住：12 / 04 15:00 — 12 / 05 11:00</p>
-                    <p>地址：4-6-1 Kinshi, Sumida-ku, Tokyo 130-0013</p>
-                    <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank" rel="noreferrer">查看地圖</a>
-                </article>
-                <article class="card stay-card">
-                    <h3>東京錦絲町京成里士滿飯店</h3>
-                    <p>入住：12 / 05 14:00 — 12 / 09 11:00</p>
-                    <p>地址：3-2-7 Kotobashi, Sumida-ku, Tokyo 130-0022</p>
-                    <a href="https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7" target="_blank" rel="noreferrer">查看地圖</a>
-                </article>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="section-title">每日行程</h2>
-            <div class="day-carousel">
-                <p class="day-carousel-hint">左右滑動，快速瀏覽每一天</p>
-                <div class="days-grid">
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 1 · 12 / 04 · 抵達與錦糸町夜生活</h3>
-                            <span class="day-badge">Thursday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li><strong>18:00</strong> 抵達成田 NRT T1，通關取行李</li>
-                            <li>
-                                <strong>19:00</strong> 轉乘至錦糸町（JR 總武線或京成 + 半藏門線）
-                            </li>
-                            <li>
-                                <strong>20:00</strong> 抵達並辦理入住：
-                                <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank"
-                                    rel="noreferrer">錦糸町樂天城市飯店</a>
-                            </li>
-                            <li>
-                                <strong>20:30</strong> 晚餐：
-                                <a href="https://maps.app.goo.gl/JS52FqmhJbtkcsZz9" target="_blank"
-                                    rel="noreferrer">居酒屋のんちゃん</a>
-                            </li>
-                            <li>
-                                <strong>22:00</strong> 夜間採買：PARCO 藥妝（23:00）、西友超市（24 小時）
-                            </li>
-                        </ul>
-                    </article>
-
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 2 · 12 / 05 · 河口湖周遊日</h3>
-                            <span class="day-badge">Friday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li><strong>06:00</strong> 起床，退房並寄放行李於飯店</li>
-                            <li><strong>07:07</strong> 搭乘富士迴遊（錦糸町 → 下吉田）</li>
-                            <li>
-                                <strong>09:25</strong>
-                                <a href="https://maps.app.goo.gl/RzjrtGkD4oUfURbG8" target="_blank"
-                                    rel="noreferrer">新倉山淺間公園</a>
-                                ，眺望富士山與忠靈塔
-                            </li>
-                            <li><strong>10:45</strong> 河口湖站搭周遊巴士至纜車口</li>
-                            <li>
-                                <strong>11:00</strong>
-                                <a href="https://www.mtfujiropeway.jp/zh-CHS/" target="_blank"
-                                    rel="noreferrer">富士山纜車</a>
-                                ＆天上山公園，造訪兔子神社
-                            </li>
-                            <li><strong>12:30</strong> 午餐：
-                                纜車站附近（可先不吃，搭船後去大石公園咖啡廳吃午餐）
-                            </li>
-                            <li>
-                                <strong>14:00</strong>
-                                <a href="https://www.fujigokokisen.jp/contents/appare/?utm_source=goodlucktrip"
-                                    target="_blank" rel="noreferrer">河口湖遊覽船</a>
-                                ，感受湖景
-                            </li>
-                            <li><strong>14:50</strong> 大石公園／<a
-                                href="https://maps.app.goo.gl/r2naG7xavVMJgJXJ6" target="_blank"
-                                rel="noreferrer">BRAND NEW DAY</a>（視楓況決定要不要去楓葉迴廊）</li>
-                            <li>
-                                <strong>17:40</strong> 富士迴遊回新宿
-                            </li>
-                            <li>
-                                <strong>19:00</strong> 晚餐：
-                                <a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank"
-                                    rel="noreferrer">牛舌的檸檬</a>
-                            </li>
-                        </ul>
-                        <div class="notice info">
-                            河口湖套票：紅線周遊巴士券 + 纜車 + 遊湖船，JPY 3,300／人。<br />
-                            旅遊資訊與時刻表可參考
-                            <a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer">富士急巴士官網</a>
-                            。
-                        </div>
-                        <div class="notice alert">
-                            返回河口湖站最晚班次：16:42 或 16:57 自自然生活館發車，務必預留轉乘時間以搭上 17:40 富士迴遊。
-                        </div>
-                    </article>
-
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 3 · 12 / 06 · 築地 · 銀座 · 台場</h3>
-                            <span class="day-badge">Saturday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li><strong>08:00</strong> 起床，前往築地市場吃海味早餐</li>
-                            <li><strong>10:20</strong> 移動到銀座，購物與咖啡時間</li>
-                            <li><strong>13:00</strong> 前往新豐洲</li>
-                            <li>
-                                <strong>14:00</strong> 進場 <a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6"
-                                    target="_blank" rel="noreferrer">teamLab Planets</a>
-                            </li>
-                            <li><strong>17:00</strong> 夜訪台場，散步彩虹大橋海濱</li>
-                            <li>
-                                <strong>19:00</strong> 晚餐：
-                                <a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
-                                    rel="noreferrer">大衆焼肉
-                                    暴飲暴食</a>
-                            </li>
-                            <li>
-                                <strong>19:00</strong> 觀賞
-                                <a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank"
-                                    rel="noreferrer">台場花火大會</a>
-                            </li>
-                            <li>
-                                <strong>19:40</strong>
-                                <a href="https://maps.app.goo.gl/VQLCPeKZF4nCzeeW9" target="_blank"
-                                    rel="noreferrer">前往東陽町</a>
-                                準備晚餐
-                            </li>
-                            <li>
-                                <strong>20:30</strong> 晚餐：
-                                <a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
-                                    rel="noreferrer">大衆焼肉
-                                    暴飲暴食</a>
-                            </li>
-                        </ul>
-                    </article>
-
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 4 · 12 / 07 · 原宿澀谷串遊</h3>
-                            <span class="day-badge">Sunday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li>
-                                <strong>08:00</strong> 出發至
-                                <a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank"
-                                    rel="noreferrer">明治神宮外苑銀杏林</a>
-                            </li>
-                            <li><strong>09:30</strong> 早午餐：<a href="https://maps.app.goo.gl/TAy7xajhxPRqdEoh9"
-                                    target="_blank" rel="noreferrer">SHAKE SHACK Gaien</a></li>
-                            <li>
-                                <strong>10:40</strong>
-                                <a href="https://maps.app.goo.gl/4kHjvEkTnz9roTVC8" target="_blank"
-                                    rel="noreferrer">原宿</a>
-                                、澀谷逛街
-                            </li>
-                            <li><strong>13:30</strong> 午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8"
-                                    target="_blank" rel="noreferrer">鮨 飛鳥</a></li>
-                            <li><strong>15:45</strong> 澀谷 SKY 預約時段，記得預留置物櫃時間</li>
-                            <li><strong>18:00</strong> 晚餐自由安排，可視體力加碼六本木燈飾</li>
-                        </ul>
-                    </article>
-
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 5 · 12 / 08 · 東京迪士尼樂園</h3>
-                            <span class="day-badge">Monday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li><strong>06:00</strong> 早起</li>
-                            <li><strong>07:00</strong> 搭乘東武巴士直達東京迪士尼度假區 <a
-                                    href="https://www.tobu-bus.com/pc/skytree_shuttle/pdf/20240805_sk_tdr_timetable.pdf"
-                                    target="_blank" rel="noreferrer">時刻表</a></li>
-                            <li><strong>08:00</strong> 入園排隊，全日體驗園區與遊行</li>
-                            <li><strong>22:00</strong> 視閉園時間返程，回飯店休息</li>
-                        </ul>
-                        <div class="notice info">
-                            建議下載官方 App 優先鎖定熱門設施的即時排隊資訊。
-                        </div>
-                    </article>
-
-                    <article class="day-card">
-                        <header>
-                            <h3>Day 6 · 12 / 09 · 最後採買與返程</h3>
-                            <span class="day-badge">Tuesday</span>
-                        </header>
-                        <ul class="timeline">
-                            <li><strong>08:30</strong> 起床收拾，11:00 前退房</li>
-                            <li><strong>10:00</strong> 淺草散步，造訪仲見世商店街與觀景台</li>
-                            <li><strong>12:30</strong> 午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7"
-                                    target="_blank" rel="noreferrer">ちんや 浅草本店</a></li>
-                            <li><strong>14:30</strong> 晴空塔展望或購物</li>
-                            <li><strong>16:30</strong> 錦糸町最後採買</li>
-                            <li><strong>18:20</strong> 出發前往成田，預留通關與退稅時間</li>
-                        </ul>
-                    </article>
+            <div class="notice-box notice-info"
+                style="margin-top: 32px; display: flex; gap: 16px; align-items: flex-start;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="flex-shrink: 0;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <div>
+                    <strong>成田 → 錦糸町建議方案：</strong><br />
+                    1. JR 總武線快速：無需轉乘，約 70~90 分鐘，JPY 1,340。<br />
+                    2. 京成 Access 特快 + 半藏門線：轉乘一次，約 70 分鐘，JPY 1,380。
                 </div>
-                <div class="scroll-arrow scroll-arrow--left" aria-hidden="true">‹</div>
-                <div class="scroll-arrow scroll-arrow--right" aria-hidden="true">›</div>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">旅行提醒與參考</h2>
-            <div class="references">
-                <article class="card">
-                    <h3>線上資源</h3>
-                    <ul>
-                        <li><a href="https://fuji-san.info/zh-tw/index.html" target="_blank" rel="noreferrer">去看富士山 ·
-                                能見度預測</a></li>
-                        <li><a href="https://www.youtube.com/live/1cnReFAU04k" target="_blank"
-                                rel="noreferrer">富士山河口湖即時影像</a></li>
-                        <li><a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer">河口湖周遊巴士資訊</a>
-                        </li>
-                    </ul>
+        <!-- Accommodation -->
+        <section id="stay" class="section-spacer">
+            <div class="section-header">
+                <span class="text-label">ACCOMMODATION</span>
+                <h2 class="section-title">住宿安排</h2>
+            </div>
+
+            <div class="stay-grid">
+                <article class="card stay-card">
+                    <div class="stay-info">
+                        <h3>東京錦糸町樂天城市飯店</h3>
+                        <p>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            12 / 04 — 12 / 05 (1 晚)
+                        </p>
+                        <p style="color: #666; font-size: 0.9rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            4-6-1 Kinshi, Sumida-ku, Tokyo
+                        </p>
+                    </div>
+                    <div class="stay-action">
+                        <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank" rel="noreferrer"
+                            class="btn btn-outline">
+                            查看地圖
+                        </a>
+                    </div>
+                </article>
+
+                <article class="card stay-card">
+                    <div class="stay-info">
+                        <h3>東京錦絲町京成里士滿飯店</h3>
+                        <p>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            12 / 05 — 12 / 09 (4 晚)
+                        </p>
+                        <p style="color: #666; font-size: 0.9rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            3-2-7 Kotobashi, Sumida-ku, Tokyo
+                        </p>
+                    </div>
+                    <div class="stay-action">
+                        <a href="https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7" target="_blank" rel="noreferrer"
+                            class="btn btn-outline">
+                            查看地圖
+                        </a>
+                    </div>
                 </article>
             </div>
         </section>
 
-        <footer>
-            © 2025 Tokyo Trip Planner · 祝旅途順利
+        <!-- Itinerary -->
+        <section id="itinerary" class="section-spacer">
+            <div class="section-header">
+                <span class="text-label">ITINERARY</span>
+                <h2 class="section-title">每日行程</h2>
+                <p style="color: #888; margin-top: 8px;">左右滑動查看詳細行程</p>
+            </div>
+
+            <div class="carousel-container">
+                <div class="days-track">
+
+                    <!-- Day 1 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">01</span>
+                            <div class="day-meta">
+                                <span>12/04</span>
+                                <span>Thursday</span>
+                            </div>
+                            <h3 class="day-title">抵達與錦糸町夜生活</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">18:00</span>
+                                    <div class="timeline-content">抵達成田 NRT T1，通關取行李</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">19:00</span>
+                                    <div class="timeline-content">轉乘至錦糸町（JR 總武線或京成 + 半藏門線）</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">20:00</span>
+                                    <div class="timeline-content">
+                                        抵達並辦理入住：<br>
+                                        <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank"
+                                            rel="noreferrer" class="timeline-link">錦糸町樂天城市飯店</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">20:30</span>
+                                    <div class="timeline-content">
+                                        晚餐：<a href="https://maps.app.goo.gl/JS52FqmhJbtkcsZz9" target="_blank"
+                                            rel="noreferrer" class="timeline-link">居酒屋のんちゃん</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">22:00</span>
+                                    <div class="timeline-content">夜間採買：PARCO 藥妝（23:00）、西友超市（24 小時）</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Day 2 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">02</span>
+                            <div class="day-meta">
+                                <span>12/05</span>
+                                <span>Friday</span>
+                            </div>
+                            <h3 class="day-title">河口湖周遊日</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">06:00</span>
+                                    <div class="timeline-content">起床，退房並寄放行李於飯店</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">07:07</span>
+                                    <div class="timeline-content">搭乘富士迴遊（錦糸町 → 下吉田）</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">09:25</span>
+                                    <div class="timeline-content">
+                                        <a href="https://maps.app.goo.gl/RzjrtGkD4oUfURbG8" target="_blank"
+                                            rel="noreferrer" class="timeline-link">新倉山淺間公園</a><br>
+                                        眺望富士山與忠靈塔
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">11:00</span>
+                                    <div class="timeline-content">
+                                        <a href="https://www.mtfujiropeway.jp/zh-CHS/" target="_blank" rel="noreferrer"
+                                            class="timeline-link">富士山纜車</a> ＆ 天上山公園
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">14:00</span>
+                                    <div class="timeline-content">
+                                        <a href="https://www.fujigokokisen.jp/contents/appare/?utm_source=goodlucktrip"
+                                            target="_blank" rel="noreferrer" class="timeline-link">河口湖遊覽船</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">14:50</span>
+                                    <div class="timeline-content">大石公園／BRAND NEW DAY</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">17:40</span>
+                                    <div class="timeline-content">富士迴遊回新宿</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">19:00</span>
+                                    <div class="timeline-content">
+                                        晚餐：<a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank"
+                                            rel="noreferrer" class="timeline-link">牛舌的檸檬</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="notice-box notice-info">
+                                河口湖套票：紅線周遊巴士券 + 纜車 + 遊湖船，JPY 3,300／人。<br>
+                                <a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer"
+                                    class="timeline-link">富士急巴士官網</a>
+                            </div>
+                            <div class="notice-box notice-alert">
+                                務必預留轉乘時間以搭上 17:40 富士迴遊。
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Day 3 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">03</span>
+                            <div class="day-meta">
+                                <span>12/06</span>
+                                <span>Saturday</span>
+                            </div>
+                            <h3 class="day-title">築地 · 銀座 · 台場</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">08:00</span>
+                                    <div class="timeline-content">築地市場吃海味早餐</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">10:20</span>
+                                    <div class="timeline-content">銀座購物與咖啡時間</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">14:00</span>
+                                    <div class="timeline-content">
+                                        <a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank"
+                                            rel="noreferrer" class="timeline-link">teamLab Planets</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">17:00</span>
+                                    <div class="timeline-content">夜訪台場，散步彩虹大橋海濱</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">19:00</span>
+                                    <div class="timeline-content">
+                                        晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
+                                            rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">19:00</span>
+                                    <div class="timeline-content">
+                                        <a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank"
+                                            rel="noreferrer" class="timeline-link">台場花火大會</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Day 4 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">04</span>
+                            <div class="day-meta">
+                                <span>12/07</span>
+                                <span>Sunday</span>
+                            </div>
+                            <h3 class="day-title">原宿澀谷串遊</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">08:00</span>
+                                    <div class="timeline-content">
+                                        <a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank"
+                                            rel="noreferrer" class="timeline-link">明治神宮外苑銀杏林</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">09:30</span>
+                                    <div class="timeline-content">
+                                        早午餐：<a href="https://maps.app.goo.gl/TAy7xajhxPRqdEoh9" target="_blank"
+                                            rel="noreferrer" class="timeline-link">SHAKE SHACK Gaien</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">10:40</span>
+                                    <div class="timeline-content">原宿、澀谷逛街</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">13:30</span>
+                                    <div class="timeline-content">
+                                        午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8" target="_blank"
+                                            rel="noreferrer" class="timeline-link">鮨 飛鳥</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">15:45</span>
+                                    <div class="timeline-content">澀谷 SKY (記得預留置物櫃時間)</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <!-- Day 5 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">05</span>
+                            <div class="day-meta">
+                                <span>12/08</span>
+                                <span>Monday</span>
+                            </div>
+                            <h3 class="day-title">東京迪士尼樂園</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">07:00</span>
+                                    <div class="timeline-content">
+                                        搭乘東武巴士直達 <a
+                                            href="https://www.tobu-bus.com/pc/skytree_shuttle/pdf/20240805_sk_tdr_timetable.pdf"
+                                            target="_blank" rel="noreferrer" class="timeline-link">時刻表</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">08:00</span>
+                                    <div class="timeline-content">入園排隊，全日體驗園區與遊行</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">22:00</span>
+                                    <div class="timeline-content">視閉園時間返程</div>
+                                </li>
+                            </ul>
+                            <div class="notice-box notice-info">
+                                建議下載官方 App 優先鎖定熱門設施的即時排隊資訊。
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Day 6 -->
+                    <article class="day-card">
+                        <div class="day-header">
+                            <span class="day-number">06</span>
+                            <div class="day-meta">
+                                <span>12/09</span>
+                                <span>Tuesday</span>
+                            </div>
+                            <h3 class="day-title">最後採買與返程</h3>
+                        </div>
+                        <div class="day-body">
+                            <ul class="timeline">
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">10:00</span>
+                                    <div class="timeline-content">淺草散步，仲見世商店街</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">12:30</span>
+                                    <div class="timeline-content">
+                                        午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7" target="_blank"
+                                            rel="noreferrer" class="timeline-link">ちんや 浅草本店</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">14:30</span>
+                                    <div class="timeline-content">晴空塔展望或購物</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">16:30</span>
+                                    <div class="timeline-content">錦糸町最後採買</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">18:20</span>
+                                    <div class="timeline-content">出發前往成田</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="refs" class="section-spacer">
+            <div class="section-header">
+                <span class="text-label">RESOURCES</span>
+                <h2 class="section-title">參考資訊</h2>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;">
+                    <a href="https://fuji-san.info/zh-tw/index.html" target="_blank" rel="noreferrer"
+                        class="btn btn-outline">
+                        富士山能見度
+                    </a>
+                    <a href="https://www.youtube.com/live/1cnReFAU04k" target="_blank" rel="noreferrer"
+                        class="btn btn-outline">
+                        河口湖即時影像
+                    </a>
+                    <a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer"
+                        class="btn btn-outline">
+                        周遊巴士資訊
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <p>© 2025 Tokyo Trip Planner · Have a nice trip</p>
         </footer>
+
     </main>
+
     <script>
-        (() => {
-            const dayCarousel = document.querySelector('.day-carousel');
-            if (!dayCarousel) return;
-            const daysGrid = dayCarousel.querySelector('.days-grid');
-            if (!daysGrid) return;
+        // Add active state to nav items on scroll
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-item');
 
-            let timer;
-
-            const showArrows = () => dayCarousel.classList.add('show-arrows');
-            const hideArrows = () => dayCarousel.classList.remove('show-arrows');
-
-            const scheduleShow = (delay = 1200) => {
-                clearTimeout(timer);
-                timer = window.setTimeout(showArrows, delay);
-            };
-
-            const handleInteraction = () => {
-                hideArrows();
-                scheduleShow();
-            };
-
-            daysGrid.addEventListener('scroll', () => {
-                hideArrows();
-                scheduleShow();
-            }, { passive: true });
-
-            ['pointerdown', 'touchstart', 'wheel'].forEach((eventName) => {
-                daysGrid.addEventListener(eventName, handleInteraction, { passive: true });
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
             });
 
-            scheduleShow(1000);
-        })();
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
     </script>
 </body>
 
