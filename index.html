@@ -281,6 +281,17 @@
             display: flex;
             flex-direction: column;
             box-shadow: var(--shadow-md);
+
+            /* Animation State */
+            transform: scale(0.95);
+            opacity: 0.7;
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .flight-card.snap-active {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: var(--shadow-lg);
         }
 
         .flight-header {
@@ -463,6 +474,17 @@
             box-shadow: var(--shadow-md);
             display: flex;
             flex-direction: column;
+
+            /* Animation State */
+            transform: scale(0.95);
+            opacity: 0.7;
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .day-card.snap-active {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: var(--shadow-lg);
         }
 
         .day-header {
@@ -612,9 +634,14 @@
                 padding: 60px 20px 40px;
             }
 
+            .days-track,
+            .flight-grid {
+                gap: 16px;
+            }
+
             .day-card,
             .flight-card {
-                flex: 0 0 85vw;
+                flex: 0 0 80vw;
             }
 
             .flight-route {
@@ -1211,6 +1238,27 @@
                     item.classList.add('active');
                 }
             });
+        });
+
+        // Scroll Snap Animation Observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('snap-active');
+                } else {
+                    entry.target.classList.remove('snap-active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.day-card, .flight-card').forEach(card => {
+            observer.observe(card);
         });
     </script>
 </body>
