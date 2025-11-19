@@ -283,15 +283,16 @@
             box-shadow: var(--shadow-md);
 
             /* Animation State */
-            transform: scale(0.95);
-            opacity: 0.7;
-            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
-        }
-
-        .flight-card.snap-active {
             transform: scale(1);
             opacity: 1;
             box-shadow: var(--shadow-lg);
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .flight-card.snap-inactive {
+            transform: scale(0.95);
+            opacity: 0.7;
+            box-shadow: var(--shadow-md);
         }
 
         .flight-header {
@@ -476,15 +477,16 @@
             flex-direction: column;
 
             /* Animation State */
-            transform: scale(0.95);
-            opacity: 0.7;
-            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
-        }
-
-        .day-card.snap-active {
             transform: scale(1);
             opacity: 1;
             box-shadow: var(--shadow-lg);
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .day-card.snap-inactive {
+            transform: scale(0.95);
+            opacity: 0.7;
+            box-shadow: var(--shadow-md);
         }
 
         .day-header {
@@ -688,6 +690,12 @@
             animation: fadeIn 0.5s ease forwards;
         }
 
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
         @keyframes pulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(197, 48, 48, 0.4);
@@ -702,10 +710,26 @@
             }
         }
 
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
+        .transit-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: #666;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 8px;
+            border-radius: 99px;
+            margin-left: 8px;
+            border: 1px solid transparent;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .transit-link:hover {
+            background: var(--white);
+            border-color: var(--sand);
+            color: var(--accent);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -939,7 +963,17 @@
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">19:00</span>
-                                    <div class="timeline-content">轉乘至錦糸町（JR 總武線或京成 + 半藏門線）</div>
+                                    <div class="timeline-content">
+                                        轉乘至錦糸町（JR 總武線或京成 + 半藏門線）
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Narita+Airport+Terminal+1&destination=Kinshicho+Station&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
@@ -1059,12 +1093,32 @@
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">08:00</span>
-                                    <div class="timeline-content">築地市場吃海味早餐</div>
+                                    <div class="timeline-content">
+                                        築地市場吃海味早餐
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Tsukiji+Outer+Market&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">10:20</span>
-                                    <div class="timeline-content">銀座購物與咖啡時間</div>
+                                    <div class="timeline-content">
+                                        銀座購物與咖啡時間
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Tsukiji+Outer+Market&destination=Ginza+Station&travelmode=walking"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
@@ -1072,19 +1126,29 @@
                                     <div class="timeline-content">
                                         <a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank"
                                             rel="noreferrer" class="timeline-link">teamLab Planets</a>
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Ginza+Station&destination=teamLab+Planets+TOKYO&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
                                     </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">17:00</span>
-                                    <div class="timeline-content">夜訪台場，散步彩虹大橋海濱</div>
-                                </li>
-                                <li class="timeline-item">
-                                    <span class="timeline-marker"></span>
-                                    <span class="timeline-time">19:00</span>
                                     <div class="timeline-content">
-                                        晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
-                                            rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a>
+                                        台場逛逛
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=teamLab+Planets+TOKYO&destination=Odaiba+Marine+Park&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
                                     </div>
                                 </li>
                                 <li class="timeline-item">
@@ -1093,6 +1157,22 @@
                                     <div class="timeline-content">
                                         <a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank"
                                             rel="noreferrer" class="timeline-link">台場花火大會</a>
+                                    </div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">20:30</span>
+                                    <div class="timeline-content">
+                                        晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
+                                            rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a>
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Odaiba+Marine+Park&destination=Yakiniku+Boinboshoku+Toyocho&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
                                     </div>
                                 </li>
                             </ul>
@@ -1117,6 +1197,14 @@
                                     <div class="timeline-content">
                                         <a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank"
                                             rel="noreferrer" class="timeline-link">明治神宮外苑銀杏林</a>
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Meiji+Jingu+Gaien+Ginkgo+Avenue&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
                                     </div>
                                 </li>
                                 <li class="timeline-item">
@@ -1130,7 +1218,17 @@
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">10:40</span>
-                                    <div class="timeline-content">原宿、澀谷逛街</div>
+                                    <div class="timeline-content">
+                                        原宿、澀谷逛街
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Meiji+Jingu+Gaien+Ginkgo+Avenue&destination=Harajuku+Station&travelmode=walking"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
@@ -1144,6 +1242,21 @@
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">15:45</span>
                                     <div class="timeline-content">澀谷 SKY (記得預留置物櫃時間)</div>
+                                </li>
+                                <li class="timeline-item">
+                                    <span class="timeline-marker"></span>
+                                    <span class="timeline-time">18:30</span>
+                                    <div class="timeline-content">
+                                        六本木點燈
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=SHIBUYA+SKY&destination=Roppongi+Keyakizaka+Dori&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -1202,7 +1315,17 @@
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">10:00</span>
-                                    <div class="timeline-content">淺草散步，仲見世商店街</div>
+                                    <div class="timeline-content">
+                                        淺草散步，仲見世商店街
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Senso-ji&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
@@ -1215,17 +1338,47 @@
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">14:30</span>
-                                    <div class="timeline-content">晴空塔展望或購物</div>
+                                    <div class="timeline-content">
+                                        晴空塔展望或購物
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Senso-ji&destination=Tokyo+Skytree&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">16:30</span>
-                                    <div class="timeline-content">錦糸町最後採買</div>
+                                    <div class="timeline-content">
+                                        錦糸町最後採買
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Tokyo+Skytree&destination=Kinshicho+Station&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                                 <li class="timeline-item">
                                     <span class="timeline-marker"></span>
                                     <span class="timeline-time">18:20</span>
-                                    <div class="timeline-content">出發前往成田</div>
+                                    <div class="timeline-content">
+                                        出發前往成田
+                                        <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Narita+Airport+Terminal+1&travelmode=transit"
+                                            target="_blank" class="transit-link">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                            </svg>
+                                            導航
+                                        </a>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -1289,25 +1442,33 @@
         });
 
         // Scroll Snap Animation Observer
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.6
+        const setupObserver = (containerSelector, cardSelector) => {
+            const container = document.querySelector(containerSelector);
+            if (!container) return;
+
+            const options = {
+                root: container,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('snap-inactive');
+                    } else {
+                        entry.target.classList.add('snap-inactive');
+                    }
+                });
+            }, options);
+
+            container.querySelectorAll(cardSelector).forEach(card => {
+                observer.observe(card);
+            });
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('snap-active');
-                } else {
-                    entry.target.classList.remove('snap-active');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.day-card, .flight-card').forEach(card => {
-            observer.observe(card);
-        });
+        setupObserver('.flight-grid', '.flight-card');
+        setupObserver('.days-track', '.day-card');
 
         // Current Time Indicator Logic
         const updateCurrentTime = () => {
