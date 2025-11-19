@@ -50,6 +50,8 @@
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             padding-bottom: 80px;
+            padding-top: 80px;
+            /* Compensate for fixed nav */
         }
 
         img {
@@ -107,16 +109,40 @@
 
         /* Navigation */
         .sticky-nav {
-            position: sticky;
+            position: fixed;
             top: 20px;
+            left: 0;
+            right: 0;
             z-index: 100;
             display: flex;
             justify-content: center;
-            margin-bottom: 40px;
             pointer-events: none;
-            /* Let clicks pass through around the pill */
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+            transform: translateY(0);
+            opacity: 1;
         }
 
+        /* Hidden state (Top) */
+        .sticky-nav.nav-hidden {
+            opacity: 0;
+            transform: translateY(-150%);
+            pointer-events: none;
+        }
+
+        /* Bottom Position */
+        .sticky-nav.nav-bottom {
+            top: auto;
+            bottom: 30px;
+            transform: translateY(0);
+        }
+
+        /* Hidden state (Bottom) - Overrides top hidden state */
+        .sticky-nav.nav-bottom.nav-hidden {
+            opacity: 0;
+            transform: translateY(150%);
+        }
+
+        /* Ensure pill is clickable */
         .nav-pill {
             pointer-events: auto;
             background: rgba(255, 255, 255, 0.8);
@@ -128,6 +154,7 @@
             display: flex;
             gap: 4px;
             box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s ease;
         }
 
         .nav-item {
@@ -731,10 +758,23 @@
             color: var(--accent);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+
+        .version-tag {
+            position: fixed;
+            top: 5px;
+            right: 10px;
+            font-size: 10px;
+            opacity: 0.3;
+            z-index: 9999;
+            color: var(--text);
+            font-family: monospace;
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
+    <div class="version-tag">v.2025.11.19.1454</div>
 
     <!-- Navigation -->
     <nav class="sticky-nav">
@@ -1422,12 +1462,15 @@
         // Add active state to nav items on scroll
         const sections = document.querySelectorAll('section');
         const navItems = document.querySelectorAll('.nav-item');
+        const nav = document.querySelector('.sticky-nav');
+        const hero = document.querySelector('.hero');
+        let isScrolling;
 
         window.addEventListener('scroll', () => {
+            // 1. Update Active Nav Item
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (pageYOffset >= (sectionTop - 200)) {
                     current = section.getAttribute('id');
                 }
@@ -1435,11 +1478,34 @@
 
             navItems.forEach(item => {
                 item.classList.remove('active');
-                if (item.getAttribute('href').includes(current)) {
+                if (current && item.getAttribute('href').includes(current)) {
                     item.classList.add('active');
                 }
             });
-        });
+
+            // 2. Nav Position & Visibility Logic
+            if (!nav || !hero) return;
+
+            // Hide while scrolling
+            nav.classList.add('nav-hidden');
+
+            // Clear existing timer
+            window.clearTimeout(isScrolling);
+
+            // Set timer to show after stop
+            isScrolling = setTimeout(() => {
+                nav.classList.remove('nav-hidden');
+            }, 150);
+
+            // Handle Position (Top vs Bottom)
+            const heroBottom = hero.offsetTop + hero.offsetHeight;
+            if (window.scrollY > heroBottom - 100) {
+                nav.classList.add('nav-bottom');
+            } else {
+                nav.classList.remove('nav-bottom');
+            }
+        }, { passive: true });
+
 
         // Scroll Snap Animation Observer
         const setupObserver = (containerSelector, cardSelector) => {
