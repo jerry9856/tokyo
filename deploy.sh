@@ -5,7 +5,7 @@ VERSION="v.$(date +'%Y.%m.%d.%H%M')"
 
 # Update the version tag in index.html
 # Works on macOS (sed -i '')
-sed -i '' "s/v\.[0-9]\{4\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{4\}/$VERSION/g" index.html
+sed -i '' "s|<div class=\"version-tag\">.*</div>|<div class=\"version-tag\">$VERSION</div>|g" index.html
 
 # Get commit message from parameter or use default
 if [ -n "$1" ]; then
@@ -15,7 +15,7 @@ else
 fi
 
 # Add the file, commit, and push
-git add index.html
+git add .
 git commit -m "$COMMIT_MSG"
 git push
 
