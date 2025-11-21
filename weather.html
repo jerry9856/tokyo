@@ -1,251 +1,64 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>富士山周邊真實天氣 (點擊置頂版)</title>
+    <title>各景點天氣</title>
+    <link rel="icon" href="icon.png" type="image/png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-    <style>
-        /* --- 基礎樣式 --- */
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
-            overflow: hidden;
-        }
-
-        /* --- 上方標題與日期列 --- */
-        #header-container {
-            height: 130px;
-            background-color: #2c3e50;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            position: relative;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 1.2rem;
-            padding: 10px 0;
-            font-weight: bold;
-            background: #1a252f;
-        }
-
-        #date-scroller {
-            display: flex;
-            overflow-x: auto;
-            flex: 1;
-            align-items: center;
-            padding: 0 10px;
-            scrollbar-width: thin;
-        }
-
-        #date-scroller::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        #date-scroller::-webkit-scrollbar-thumb {
-            background: #7f8c8d;
-            border-radius: 3px;
-        }
-
-        .date-card {
-            flex: 0 0 auto;
-            width: 80px;
-            height: 65px;
-            background: #34495e;
-            margin-right: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-        }
-
-        .date-card:hover {
-            background: #46627f;
-        }
-
-        .date-card.active {
-            background: #3498db;
-            border-color: #85c1e9;
-            transform: scale(1.05);
-        }
-
-        .date-text {
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .day-text {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        /* --- 地圖區域 --- */
-        #map {
-            height: calc(100vh - 130px);
-            width: 100%;
-            z-index: 1;
-        }
-
-        /* --- 自定義天氣標記樣式 --- */
-        /* 注意：transition 加入 transform 讓浮起時更滑順 */
-        .weather-marker {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
-            text-align: center;
-            padding: 6px 4px;
-            width: 130px !important;
-            height: auto !important;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid #ccc;
-            /* 預設邊框 */
-            position: relative;
-            cursor: pointer;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        /* 選中狀態 (透過 JS 添加 class) */
-        .weather-marker.selected {
-            border-color: #3498db;
-            background: #fff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 對話框箭頭 */
-        .weather-marker::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            margin-left: -8px;
-            border-width: 8px 8px 0;
-            border-style: solid;
-            border-color: rgba(255, 255, 255, 0.95) transparent;
-        }
-
-        /* 當選中時，箭頭顏色也要跟著變 (非必要，但細節更好) */
-        .weather-marker.selected::after {
-            border-top-color: #fff;
-        }
-
-        .wm-location {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-            pointer-events: none;
-        }
-
-        .wm-icon {
-            font-size: 2.2rem;
-            line-height: 1.1;
-            margin: 2px 0;
-            pointer-events: none;
-        }
-
-        .wm-temp {
-            font-size: 0.95rem;
-            font-weight: bold;
-            color: #d35400;
-            letter-spacing: -0.5px;
-            pointer-events: none;
-        }
-
-        .wm-rain {
-            font-size: 0.75rem;
-            color: #2980b9;
-            margin-top: 4px;
-            background: #ecf0f1;
-            padding: 2px 6px;
-            border-radius: 10px;
-            pointer-events: none;
-        }
-
-        /* --- 讀取畫面與註腳 --- */
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            flex-direction: column;
-        }
-
-        .loading-sub {
-            font-size: 1rem;
-            margin-top: 10px;
-            opacity: 0.8;
-        }
-
-        .note {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: rgba(255, 255, 255, 0.7);
-            font-size: 10px;
-            padding: 2px 5px;
-            z-index: 999;
-            border-radius: 3px;
-            pointer-events: none;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 
-<body>
+<body class="weather-page">
 
     <div id="loading" class="loading-overlay">
-        <div>正在連線 Open-Meteo 取得真實天氣...</div>
-        <div class="loading-sub">載入富士山周邊數據</div>
+        <div class="spinner"></div>
     </div>
 
-    <div id="header-container">
-        <div class="title">🗻 富士山周邊一週天氣</div>
-        <div id="date-scroller"></div>
+    <div class="weather-header">
+        <a href="index.html" class="weather-back-btn" aria-label="Back to Home">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </a>
+        <div class="weather-title">各景點一週天氣</div>
+        <div id="date-scroller" class="weather-date-scroller"></div>
     </div>
+
+    <div id="spot-list" class="weather-spot-list"></div>
 
     <div id="map"></div>
-    <div class="note">Data source: Open-Meteo.com</div>
+    <div class="map-note">Data source: Open-Meteo.com</div>
 
     <script>
         // 1. 景點經緯度
         const spots = [
+            { name: "錦糸町車站", lat: 35.6960, lng: 139.8140 },
+            { name: "迪士尼樂園", lat: 35.6329, lng: 139.8804 },
             { name: "河口湖車站", lat: 35.4982, lng: 138.7686 },
             { name: "大石公園", lat: 35.5228, lng: 138.7455 },
             { name: "下吉田車站", lat: 35.4886, lng: 138.8055 },
-            { name: "新倉山淺間神社", lat: 35.5005, lng: 138.8014 }
+            { name: "新倉山淺間神社", lat: 35.5005, lng: 138.8014 },
+            { name: "晴空塔", lat: 35.7101, lng: 139.8107 },
+            { name: "澀谷SKY", lat: 35.6583, lng: 139.7023 },
         ];
 
         // 天氣代碼轉換
@@ -262,13 +75,22 @@
         }
 
         // 2. 初始化地圖
-        const map = L.map('map').setView([35.505, 138.775], 13);
+        const map = L.map('map', {
+            zoomControl: false // Move zoom control if needed, or keep default
+        }).setView([35.505, 138.775], 13);
+
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
         let markersLayer = L.layerGroup().addTo(map);
         let globalForecastData = [];
+        let currentDayIndex = 0;
+        let selectedSpotName = null;
 
         // 3. 抓取資料
         async function fetchWeatherData() {
@@ -317,6 +139,7 @@
             }
             document.getElementById('loading').style.display = 'none';
             renderDateSelector();
+            renderSpotList();
             updateMapMarkers(0);
         }
 
@@ -325,62 +148,99 @@
             const container = document.getElementById('date-scroller');
             globalForecastData.forEach((day, index) => {
                 const card = document.createElement('div');
-                card.className = `date-card ${index === 0 ? 'active' : ''}`;
-                card.innerHTML = `<div class="date-text">${day.displayDate}</div><div class="day-text">${day.dayOfWeek}</div>`;
+                card.className = `weather-date-card ${index === 0 ? 'active' : ''}`;
+                card.innerHTML = `<div class="weather-date-text">${day.displayDate}</div><div class="weather-day-text">${day.dayOfWeek}</div>`;
                 card.addEventListener('click', () => {
-                    document.querySelectorAll('.date-card').forEach(c => c.classList.remove('active'));
+                    document.querySelectorAll('.weather-date-card').forEach(c => c.classList.remove('active'));
                     card.classList.add('active');
+                    currentDayIndex = index;
                     updateMapMarkers(index);
                 });
                 container.appendChild(card);
             });
         }
 
-        // 6. 更新標記 (核心修改處：處理點擊置頂)
+        // 5.1 景點選單
+        function renderSpotList() {
+            const container = document.getElementById('spot-list');
+            container.innerHTML = '';
+            spots.forEach(spot => {
+                const btn = document.createElement('div');
+                btn.className = 'weather-spot-item';
+                btn.dataset.spotName = spot.name;
+                btn.textContent = spot.name;
+                btn.addEventListener('click', () => {
+                    // Toggle selection
+                    if (selectedSpotName === spot.name) {
+                        selectedSpotName = null;
+                    } else {
+                        selectedSpotName = spot.name;
+                        map.setView([spot.lat, spot.lng], 14);
+                    }
+                    updateSpotListUI();
+                    updateMapMarkers(currentDayIndex);
+                });
+                container.appendChild(btn);
+            });
+            updateSpotListUI();
+        }
+
+        function updateSpotListUI() {
+            document.querySelectorAll('.weather-spot-item').forEach(btn => {
+                if (btn.dataset.spotName === selectedSpotName) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // 6. 更新標記
         function updateMapMarkers(dayIndex) {
             markersLayer.clearLayers();
             const dayData = globalForecastData[dayIndex];
 
             Object.keys(dayData.weatherData).forEach(spotName => {
                 const w = dayData.weatherData[spotName];
+                const isSelected = (spotName === selectedSpotName);
 
-                const customIcon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `
-                        <div class="weather-marker">
-                            <div class="wm-location">${spotName}</div>
-                            <div class="wm-icon">${w.icon}</div>
-                            <div class="wm-temp">${w.tempMin}° ~ ${w.tempMax}°C</div>
-                            <div class="wm-rain">☔ 降雨 ${w.pop}%</div>
-                        </div>
-                    `,
-                    iconSize: [130, 110],
-                    iconAnchor: [65, 115]
-                });
-
-                const marker = L.marker([w.lat, w.lng], { icon: customIcon });
-
-                // --- 關鍵修改：點擊事件 ---
-                marker.on('click', function () {
-                    // 1. 遍歷圖層中所有標記，將它們還原
-                    markersLayer.eachLayer(layer => {
-                        // 重置 Z-index
-                        layer.setZIndexOffset(0);
-
-                        // 移除 CSS 的 .selected 樣式 (變回灰色邊框)
-                        const el = layer.getElement().querySelector('.weather-marker');
-                        if (el) el.classList.remove('selected');
+                let icon;
+                if (isSelected) {
+                    icon = L.divIcon({
+                        className: 'custom-div-icon',
+                        html: `
+                            <div class="weather-marker selected">
+                                <div class="wm-location">${spotName}</div>
+                                <div class="wm-icon">${w.icon}</div>
+                                <div class="wm-temp">${w.tempMin}° ~ ${w.tempMax}°C</div>
+                                <div class="wm-rain">☔ 降雨 ${w.pop}%</div>
+                            </div>
+                        `,
+                        iconSize: [140, 120],
+                        iconAnchor: [70, 120]
                     });
+                } else {
+                    icon = L.divIcon({
+                        className: 'simple-dot-marker',
+                        html: '',
+                        iconSize: [16, 16],
+                        iconAnchor: [8, 8]
+                    });
+                }
 
-                    // 2. 將被點擊的這個標記 Z-index 設為很高 (置頂)
-                    this.setZIndexOffset(1000);
+                const marker = L.marker([w.lat, w.lng], { icon: icon });
 
-                    // 3. 加上 .selected 樣式 (變藍色邊框)
-                    const myEl = this.getElement().querySelector('.weather-marker');
-                    if (myEl) myEl.classList.add('selected');
+                marker.on('click', function () {
+                    selectedSpotName = spotName;
+                    updateSpotListUI();
+                    updateMapMarkers(currentDayIndex);
+                    // map.setView([w.lat, w.lng], 14); // Optional: center on click
                 });
 
                 marker.addTo(markersLayer);
+                if (isSelected) {
+                    marker.setZIndexOffset(1000);
+                }
             });
         }
 
