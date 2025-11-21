@@ -821,10 +821,9 @@
 </head>
 
 <body>
-
-    <body>
-
-        <button class="jump-to-now-btn" aria-label="Jump to current event">
+    <div id="app">
+        <button class="jump-to-now-btn" :class="{ visible: hasCurrent }" @click="jumpToNow"
+            aria-label="Jump to current event">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -833,12 +832,12 @@
         </button>
 
         <!-- Navigation -->
-        <nav class="sticky-nav">
+        <nav class="sticky-nav" :class="navClasses">
             <div class="nav-pill">
-                <a href="#flights" class="nav-item">航班</a>
-                <a href="#stay" class="nav-item">住宿</a>
-                <a href="#itinerary" class="nav-item">行程</a>
-                <a href="#refs" class="nav-item">資訊</a>
+                <a v-for="item in navItems" :key="item.id" :href="'#' + item.id" class="nav-item"
+                    :class="{ active: activeSection === item.id }">
+                    {{ item.label }}
+                </a>
             </div>
         </nav>
 
@@ -846,9 +845,9 @@
 
             <!-- Hero -->
             <header class="hero">
-                <span class="hero-badge">TOKYO WINTER ESCAPE</span>
-                <h1 class="hero-title">東京 6 日</h1>
-                <p class="hero-subtitle">富士山絕景 · 城市漫遊 · 迪士尼夢幻 · 冬日燈飾</p>
+                <span class="hero-badge">{{ hero.badge }}</span>
+                <h1 class="hero-title">{{ hero.title }}</h1>
+                <p class="hero-subtitle">{{ hero.subtitle }}</p>
 
                 <div class="hero-meta">
                     <span>
@@ -859,7 +858,7 @@
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                         </svg>
-                        2025 / 12 / 04 — 12 / 09
+                        {{ hero.dates }}
                     </span>
                 </div>
             </header>
@@ -872,71 +871,35 @@
                 </div>
 
                 <div class="flight-grid">
-                    <!-- Outbound -->
-                    <article class="flight-card">
+                    <article v-for="flight in flights" :key="flight.code" class="flight-card">
                         <div class="flight-header">
-                            <span class="flight-type">去程 · OUTBOUND</span>
-                            <span class="flight-code">TR874</span>
+                            <span class="flight-type">{{ flight.type }}</span>
+                            <span class="flight-code">{{ flight.code }}</span>
                         </div>
                         <div class="flight-body">
                             <div class="flight-route">
                                 <div class="airport">
-                                    <div class="airport-code">TPE</div>
-                                    <div class="airport-time">14:00</div>
+                                    <div class="airport-code">{{ flight.from.code }}</div>
+                                    <div class="airport-time">{{ flight.from.time }}</div>
                                 </div>
                                 <div class="flight-divider"></div>
                                 <div class="airport">
-                                    <div class="airport-code">NRT</div>
-                                    <div class="airport-time">18:00</div>
+                                    <div class="airport-code">{{ flight.to.code }}</div>
+                                    <div class="airport-time" v-html="flight.to.time"></div>
                                 </div>
                             </div>
                             <div class="flight-details">
                                 <div class="detail-item">
                                     <label>DATE</label>
-                                    <span>12 / 04 (四)</span>
+                                    <span>{{ flight.date }}</span>
                                 </div>
                                 <div class="detail-item">
                                     <label>AIRLINE</label>
-                                    <span>Scoot 酷航</span>
+                                    <span>{{ flight.airline }}</span>
                                 </div>
                                 <div class="detail-item">
                                     <label>TERMINAL</label>
-                                    <span>TPE T1 → NRT T1</span>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Inbound -->
-                    <article class="flight-card">
-                        <div class="flight-header">
-                            <span class="flight-type">回程 · INBOUND</span>
-                            <span class="flight-code">GK13</span>
-                        </div>
-                        <div class="flight-body">
-                            <div class="flight-route">
-                                <div class="airport">
-                                    <div class="airport-code">NRT</div>
-                                    <div class="airport-time">22:25</div>
-                                </div>
-                                <div class="flight-divider"></div>
-                                <div class="airport">
-                                    <div class="airport-code">TPE</div>
-                                    <div class="airport-time">01:50<small>+1</small></div>
-                                </div>
-                            </div>
-                            <div class="flight-details">
-                                <div class="detail-item">
-                                    <label>DATE</label>
-                                    <span>12 / 09 (二)</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>AIRLINE</label>
-                                    <span>Jetstar 捷星</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>TERMINAL</label>
-                                    <span>NRT T3 → TPE</span>
+                                    <span>{{ flight.terminal }}</span>
                                 </div>
                             </div>
                         </div>
@@ -954,7 +917,7 @@
                     <div>
                         <strong>成田 → 錦糸町建議方案：</strong><br />
                         1. JR 總武線快速：無需轉乘，約 70~90 分鐘，JPY 1,340。<br />
-                        2. 京成 Access 特快 + 半藏門線：轉乘一次，約 70 分鐘，JPY 1,380。
+                        2. 京成 Access 特快 + 半藏門線：轉乘一次，約 70 分鐘,JPY 1,380。
                     </div>
                 </div>
             </section>
@@ -967,9 +930,9 @@
                 </div>
 
                 <div class="stay-grid">
-                    <article class="card stay-card">
+                    <article v-for="hotel in hotels" :key="hotel.name" class="card stay-card">
                         <div class="stay-info">
-                            <h3>東京錦糸町樂天城市飯店</h3>
+                            <h3>{{ hotel.name }}</h3>
                             <p>
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
@@ -978,7 +941,7 @@
                                     <line x1="8" y1="2" x2="8" y2="6"></line>
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
-                                12 / 04 — 12 / 05 (1 晚)
+                                {{ hotel.dates }}
                             </p>
                             <p style="color: #666; font-size: 0.9rem;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -986,42 +949,11 @@
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
-                                4-6-1 Kinshi, Sumida-ku, Tokyo
+                                {{ hotel.address }}
                             </p>
                         </div>
                         <div class="stay-action">
-                            <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank" rel="noreferrer"
-                                class="btn btn-outline">
-                                查看地圖
-                            </a>
-                        </div>
-                    </article>
-
-                    <article class="card stay-card">
-                        <div class="stay-info">
-                            <h3>東京錦絲町京成里士滿飯店</h3>
-                            <p>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                                12 / 05 — 12 / 09 (4 晚)
-                            </p>
-                            <p style="color: #666; font-size: 0.9rem;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                3-2-7 Kotobashi, Sumida-ku, Tokyo
-                            </p>
-                        </div>
-                        <div class="stay-action">
-                            <a href="https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7" target="_blank" rel="noreferrer"
-                                class="btn btn-outline">
+                            <a :href="hotel.mapUrl" target="_blank" rel="noreferrer" class="btn btn-outline">
                                 查看地圖
                             </a>
                         </div>
@@ -1039,448 +971,28 @@
 
                 <div class="carousel-container">
                     <div class="days-track">
-
-                        <!-- Day 1 -->
-                        <article class="day-card">
+                        <article v-for="day in days" :key="day.number" class="day-card">
                             <div class="day-header">
-                                <span class="day-number">01</span>
+                                <span class="day-number">{{ day.number.toString().padStart(2, '0') }}</span>
                                 <div class="day-meta">
-                                    <span>12/04</span>
-                                    <span>Thursday</span>
+                                    <span>{{ day.date }}</span>
+                                    <span>{{ day.weekday }}</span>
                                 </div>
-                                <h3 class="day-title">抵達與錦糸町夜生活</h3>
+                                <h3 class="day-title">{{ day.title }}</h3>
                             </div>
                             <div class="day-body">
                                 <ul class="timeline">
-                                    <li class="timeline-item">
+                                    <li v-for="(item, index) in day.timeline" :key="index" class="timeline-item"
+                                        :class="{ current: item.isCurrent }">
                                         <span class="timeline-marker"></span>
-                                        <span class="timeline-time">18:00</span>
-                                        <div class="timeline-content">抵達成田 NRT T1，通關取行李</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">19:00</span>
-                                        <div class="timeline-content">
-                                            轉乘至錦糸町（JR 總武線或京成 + 半藏門線）
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Narita+Airport+Terminal+1&destination=Kinshicho+Station&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">20:00</span>
-                                        <div class="timeline-content">
-                                            抵達並辦理入住：<br>
-                                            <a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank"
-                                                rel="noreferrer" class="timeline-link">錦糸町樂天城市飯店</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">20:30</span>
-                                        <div class="timeline-content">
-                                            晚餐：<a href="https://maps.app.goo.gl/JS52FqmhJbtkcsZz9" target="_blank"
-                                                rel="noreferrer" class="timeline-link">居酒屋のんちゃん</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">22:00</span>
-                                        <div class="timeline-content">夜間採買：PARCO 藥妝（23:00）、西友超市（24 小時）</div>
+                                        <span class="timeline-time">{{ item.time }}</span>
+                                        <div class="timeline-content" v-html="item.content"></div>
                                     </li>
                                 </ul>
+                                <div v-if="day.notice" class="notice-box" :class="day.notice.type"
+                                    v-html="day.notice.content"></div>
                             </div>
                         </article>
-
-                        <!-- Day 2 -->
-                        <article class="day-card">
-                            <div class="day-header">
-                                <span class="day-number">02</span>
-                                <div class="day-meta">
-                                    <span>12/05</span>
-                                    <span>Friday</span>
-                                </div>
-                                <h3 class="day-title">河口湖周遊日</h3>
-                            </div>
-                            <div class="day-body">
-                                <ul class="timeline">
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">06:00</span>
-                                        <div class="timeline-content">起床，退房並寄放行李於飯店</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">07:07</span>
-                                        <div class="timeline-content">搭乘富士迴遊（錦糸町 → 下吉田）</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">09:25</span>
-                                        <div class="timeline-content">
-                                            <a href="https://maps.app.goo.gl/RzjrtGkD4oUfURbG8" target="_blank"
-                                                rel="noreferrer" class="timeline-link">新倉山淺間公園</a><br>
-                                            眺望富士山與忠靈塔
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">11:00</span>
-                                        <div class="timeline-content">
-                                            <a href="https://www.mtfujiropeway.jp/zh-CHS/" target="_blank"
-                                                rel="noreferrer" class="timeline-link">富士山纜車</a> ＆ 天上山公園
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">14:00</span>
-                                        <div class="timeline-content">
-                                            <a href="https://www.fujigokokisen.jp/contents/appare/?utm_source=goodlucktrip"
-                                                target="_blank" rel="noreferrer" class="timeline-link">河口湖遊覽船</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">14:50</span>
-                                        <div class="timeline-content">大石公園／BRAND NEW DAY</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">17:40</span>
-                                        <div class="timeline-content">富士迴遊回新宿</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">19:00</span>
-                                        <div class="timeline-content">
-                                            晚餐：<a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank"
-                                                rel="noreferrer" class="timeline-link">牛舌的檸檬</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="notice-box notice-info">
-                                    河口湖套票：紅線周遊巴士券 + 纜車 + 遊湖船，JPY 3,300／人。<br>
-                                    <a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer"
-                                        class="timeline-link">富士急巴士官網</a>
-                                </div>
-                                <div class="notice-box notice-alert">
-                                    務必預留轉乘時間以搭上 17:40 富士迴遊。
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- Day 3 -->
-                        <article class="day-card">
-                            <div class="day-header">
-                                <span class="day-number">03</span>
-                                <div class="day-meta">
-                                    <span>12/06</span>
-                                    <span>Saturday</span>
-                                </div>
-                                <h3 class="day-title">築地 · 銀座 · 台場</h3>
-                            </div>
-                            <div class="day-body">
-                                <ul class="timeline">
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">08:00</span>
-                                        <div class="timeline-content">
-                                            築地市場吃海味早餐
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Tsukiji+Outer+Market&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">10:20</span>
-                                        <div class="timeline-content">
-                                            銀座購物與咖啡時間
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Tsukiji+Outer+Market&destination=Ginza+Station&travelmode=walking"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">14:00</span>
-                                        <div class="timeline-content">
-                                            <a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank"
-                                                rel="noreferrer" class="timeline-link">teamLab Planets</a>
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Ginza+Station&destination=teamLab+Planets+TOKYO&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">17:00</span>
-                                        <div class="timeline-content">
-                                            台場逛逛
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=teamLab+Planets+TOKYO&destination=Odaiba+Marine+Park&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">19:00</span>
-                                        <div class="timeline-content">
-                                            <a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank"
-                                                rel="noreferrer" class="timeline-link">台場花火大會</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">20:30</span>
-                                        <div class="timeline-content">
-                                            晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank"
-                                                rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a>
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Odaiba+Marine+Park&destination=Yakiniku+Boinboshoku+Toyocho&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </article>
-
-                        <!-- Day 4 -->
-                        <article class="day-card">
-                            <div class="day-header">
-                                <span class="day-number">04</span>
-                                <div class="day-meta">
-                                    <span>12/07</span>
-                                    <span>Sunday</span>
-                                </div>
-                                <h3 class="day-title">原宿澀谷串遊</h3>
-                            </div>
-                            <div class="day-body">
-                                <ul class="timeline">
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">08:00</span>
-                                        <div class="timeline-content">
-                                            <a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank"
-                                                rel="noreferrer" class="timeline-link">明治神宮外苑銀杏林</a>
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Meiji+Jingu+Gaien+Ginkgo+Avenue&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">09:30</span>
-                                        <div class="timeline-content">
-                                            早午餐：<a href="https://maps.app.goo.gl/TAy7xajhxPRqdEoh9" target="_blank"
-                                                rel="noreferrer" class="timeline-link">SHAKE SHACK Gaien</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">10:40</span>
-                                        <div class="timeline-content">
-                                            原宿、澀谷逛街
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Meiji+Jingu+Gaien+Ginkgo+Avenue&destination=Harajuku+Station&travelmode=walking"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">13:30</span>
-                                        <div class="timeline-content">
-                                            午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8" target="_blank"
-                                                rel="noreferrer" class="timeline-link">鮨 飛鳥</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">15:45</span>
-                                        <div class="timeline-content">澀谷 SKY (記得預留置物櫃時間)</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">18:30</span>
-                                        <div class="timeline-content">
-                                            六本木點燈
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=SHIBUYA+SKY&destination=Roppongi+Keyakizaka+Dori&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </article>
-
-                        <!-- Day 5 -->
-                        <article class="day-card">
-                            <div class="day-header">
-                                <span class="day-number">05</span>
-                                <div class="day-meta">
-                                    <span>12/08</span>
-                                    <span>Monday</span>
-                                </div>
-                                <h3 class="day-title">東京迪士尼樂園</h3>
-                            </div>
-                            <div class="day-body">
-                                <ul class="timeline">
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">07:00</span>
-                                        <div class="timeline-content">
-                                            搭乘東武巴士直達 <a
-                                                href="https://www.tobu-bus.com/pc/skytree_shuttle/pdf/20240805_sk_tdr_timetable.pdf"
-                                                target="_blank" rel="noreferrer" class="timeline-link">時刻表</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">08:00</span>
-                                        <div class="timeline-content">入園排隊，全日體驗園區與遊行</div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">22:00</span>
-                                        <div class="timeline-content">視閉園時間返程</div>
-                                    </li>
-                                </ul>
-                                <div class="notice-box notice-info">
-                                    建議下載官方 App 優先鎖定熱門設施的即時排隊資訊。
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- Day 6 -->
-                        <article class="day-card">
-                            <div class="day-header">
-                                <span class="day-number">06</span>
-                                <div class="day-meta">
-                                    <span>12/09</span>
-                                    <span>Tuesday</span>
-                                </div>
-                                <h3 class="day-title">最後採買與返程</h3>
-                            </div>
-                            <div class="day-body">
-                                <ul class="timeline">
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">10:00</span>
-                                        <div class="timeline-content">
-                                            淺草散步，仲見世商店街
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Senso-ji&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">12:30</span>
-                                        <div class="timeline-content">
-                                            午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7" target="_blank"
-                                                rel="noreferrer" class="timeline-link">ちんや 浅草本店</a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">14:30</span>
-                                        <div class="timeline-content">
-                                            晴空塔展望或購物
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Senso-ji&destination=Tokyo+Skytree&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">16:30</span>
-                                        <div class="timeline-content">
-                                            錦糸町最後採買
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Tokyo+Skytree&destination=Kinshicho+Station&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li class="timeline-item">
-                                        <span class="timeline-marker"></span>
-                                        <span class="timeline-time">18:20</span>
-                                        <div class="timeline-content">
-                                            出發前往成田
-                                            <a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Narita+Airport+Terminal+1&travelmode=transit"
-                                                target="_blank" class="transit-link">
-                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
-                                                </svg>
-                                                導航
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </article>
-
                     </div>
                 </div>
             </section>
@@ -1493,17 +1005,9 @@
                 </div>
                 <div class="card" style="text-align: center;">
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;">
-                        <a href="https://fuji-san.info/zh-tw/index.html" target="_blank" rel="noreferrer"
+                        <a v-for="ref in references" :key="ref.label" :href="ref.url" target="_blank" rel="noreferrer"
                             class="btn btn-outline">
-                            富士山能見度
-                        </a>
-                        <a href="https://www.youtube.com/live/1cnReFAU04k" target="_blank" rel="noreferrer"
-                            class="btn btn-outline">
-                            河口湖即時影像
-                        </a>
-                        <a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer"
-                            class="btn btn-outline">
-                            周遊巴士資訊
+                            {{ ref.label }}
                         </a>
                     </div>
                 </div>
@@ -1511,166 +1015,312 @@
 
             <footer class="site-footer">
                 <p>© 2025 Tokyo Trip Planner · Have a nice trip</p>
-                <div class="version-tag">v.2025.11.20.1811</div>
+                <div class="version-tag">v.2025.11.21.vue2</div>
             </footer>
 
         </main>
+    </div>
 
-        <script>
-            // Add active state to nav items on scroll
-            const sections = document.querySelectorAll('section');
-            const navItems = document.querySelectorAll('.nav-item');
-            const nav = document.querySelector('.sticky-nav');
-            const hero = document.querySelector('.hero');
-            let isScrolling;
+    <!-- Vue 2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                activeSection: '',
+                navClasses: {
+                    'nav-hidden': false,
+                    'nav-bottom': false
+                },
+                isScrolling: null,
+                hasCurrent: false,
 
-            window.addEventListener('scroll', () => {
-                // 1. Update Active Nav Item
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= (sectionTop - 200)) {
-                        current = section.getAttribute('id');
+                navItems: [
+                    { id: 'flights', label: '航班' },
+                    { id: 'stay', label: '住宿' },
+                    { id: 'itinerary', label: '行程' },
+                    { id: 'refs', label: '資訊' }
+                ],
+
+                hero: {
+                    badge: 'TOKYO WINTER ESCAPE',
+                    title: '東京 6 日',
+                    subtitle: '富士山絕景 · 城市漫遊 · 迪士尼夢幻 · 冬日燈飾',
+                    dates: '2025 / 12 / 04 — 12 / 09'
+                },
+
+                flights: [
+                    {
+                        type: '去程 · OUTBOUND',
+                        code: 'TR874',
+                        from: { code: 'TPE', time: '14:00' },
+                        to: { code: 'NRT', time: '18:00' },
+                        date: '12 / 04 (四)',
+                        airline: 'Scoot 酷航',
+                        terminal: 'TPE T1 → NRT T1'
+                    },
+                    {
+                        type: '回程 · INBOUND',
+                        code: 'GK13',
+                        from: { code: 'NRT', time: '22:25' },
+                        to: { code: 'TPE', time: '01:50<small>+1</small>' },
+                        date: '12 / 09 (二)',
+                        airline: 'Jetstar 捷星',
+                        terminal: 'NRT T3 → TPE'
                     }
-                });
+                ],
 
-                navItems.forEach(item => {
-                    item.classList.remove('active');
-                    if (current && item.getAttribute('href').includes(current)) {
-                        item.classList.add('active');
+                hotels: [
+                    {
+                        name: '東京錦糸町樂天城市飯店',
+                        dates: '12 / 04 — 12 / 05 (1 晚)',
+                        address: '4-6-1 Kinshi, Sumida-ku, Tokyo',
+                        mapUrl: 'https://maps.app.goo.gl/hyqmBvsPMQWwTPG19'
+                    },
+                    {
+                        name: '東京錦絲町京成里士滿飯店',
+                        dates: '12 / 05 — 12 / 09 (4 晚)',
+                        address: '3-2-7 Kotobashi, Sumida-ku, Tokyo',
+                        mapUrl: 'https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7'
                     }
-                });
+                ],
 
-                // 2. Nav Position & Visibility Logic
-                if (!nav || !hero) return;
-
-                // Hide while scrolling
-                nav.classList.add('nav-hidden');
-
-                // Clear existing timer
-                window.clearTimeout(isScrolling);
-
-                // Set timer to show after stop
-                isScrolling = setTimeout(() => {
-                    nav.classList.remove('nav-hidden');
-                }, 150);
-
-                // Handle Position (Top vs Bottom)
-                const heroBottom = hero.offsetTop + hero.offsetHeight;
-                if (window.scrollY > heroBottom - 100) {
-                    nav.classList.add('nav-bottom');
-                } else {
-                    nav.classList.remove('nav-bottom');
-                }
-            }, { passive: true });
-
-
-            // Scroll Snap Animation Observer
-            const setupObserver = (containerSelector, cardSelector) => {
-                const container = document.querySelector(containerSelector);
-                if (!container) return;
-
-                const options = {
-                    root: container,
-                    rootMargin: '0px',
-                    threshold: 0.5
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.remove('snap-inactive');
-                        } else {
-                            entry.target.classList.add('snap-inactive');
+                days: [
+                    {
+                        number: 1,
+                        date: '12/04',
+                        weekday: 'Thursday',
+                        title: '抵達與錦糸町夜生活',
+                        timeline: [
+                            { time: '18:00', content: '抵達成田 NRT T1，通關取行李', isCurrent: false },
+                            { time: '19:00', content: '轉乘至錦糸町（JR 總武線或京成 + 半藏門線）<a href="https://www.google.com/maps/dir/?api=1&origin=Narita+Airport+Terminal+1&destination=Kinshicho+Station&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '20:00', content: '抵達並辦理入住：<br><a href="https://maps.app.goo.gl/hyqmBvsPMQWwTPG19" target="_blank" rel="noreferrer" class="timeline-link">錦糸町樂天城市飯店</a>', isCurrent: false },
+                            { time: '20:30', content: '晚餐：<a href="https://maps.app.goo.gl/JS52FqmhJbtkcsZz9" target="_blank" rel="noreferrer" class="timeline-link">居酒屋のんちゃん</a>', isCurrent: false },
+                            { time: '22:00', content: '夜間採買：PARCO 藥妝（23:00）、西友超市（24 小時）', isCurrent: false }
+                        ]
+                    },
+                    {
+                        number: 2,
+                        date: '12/05',
+                        weekday: 'Friday',
+                        title: '河口湖周遊日',
+                        timeline: [
+                            { time: '06:00', content: '起床，退房並寄放行李於飯店', isCurrent: false },
+                            { time: '07:07', content: '搭乘富士迴遊（錦糸町 → 下吉田）', isCurrent: false },
+                            { time: '09:25', content: '<a href="https://maps.app.goo.gl/RzjrtGkD4oUfURbG8" target="_blank" rel="noreferrer" class="timeline-link">新倉山淺間公園</a><br>眺望富士山與忠靈塔', isCurrent: false },
+                            { time: '11:00', content: '<a href="https://www.mtfujiropeway.jp/zh-CHS/" target="_blank" rel="noreferrer" class="timeline-link">富士山纜車</a> ＆ 天上山公園', isCurrent: false },
+                            { time: '14:00', content: '<a href="https://www.fujigokokisen.jp/contents/appare/?utm_source=goodlucktrip" target="_blank" rel="noreferrer" class="timeline-link">河口湖遊覽船</a>', isCurrent: false },
+                            { time: '14:50', content: '大石公園／BRAND NEW DAY', isCurrent: false },
+                            { time: '17:40', content: '富士迴遊回新宿', isCurrent: false },
+                            { time: '19:00', content: '晚餐：<a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank" rel="noreferrer" class="timeline-link">牛舌的檸檬</a>', isCurrent: false }
+                        ],
+                        notice: {
+                            type: 'notice-info',
+                            content: '河口湖套票：紅線周遊巴士券 + 纜車 + 遊湖船，JPY 3,300／人。<br><a href="https://www.fujikyubus.co.jp/shuyu" target="_blank" rel="noreferrer" class="timeline-link">富士急巴士官網</a><br><br><div class="notice-box notice-alert" style="margin-top: 16px;">務必預留轉乘時間以搭上 17:40 富士迴遊。</div>'
                         }
+                    },
+                    {
+                        number: 3,
+                        date: '12/06',
+                        weekday: 'Saturday',
+                        title: '築地 · 銀座 · 台場',
+                        timeline: [
+                            { time: '08:00', content: '築地市場吃海味早餐<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Tsukiji+Outer+Market&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '10:20', content: '銀座購物與咖啡時間<a href="https://www.google.com/maps/dir/?api=1&origin=Tsukiji+Outer+Market&destination=Ginza+Station&travelmode=walking" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '14:00', content: '<a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank" rel="noreferrer" class="timeline-link">teamLab Planets</a><a href="https://www.google.com/maps/dir/?api=1&origin=Ginza+Station&destination=teamLab+Planets+TOKYO&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '17:00', content: '台場逛逛<a href="https://www.google.com/maps/dir/?api=1&origin=teamLab+Planets+TOKYO&destination=Odaiba+Marine+Park&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '19:00', content: '<a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank" rel="noreferrer" class="timeline-link">台場花火大會</a>', isCurrent: false },
+                            { time: '20:30', content: '晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank" rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a><a href="https://www.google.com/maps/dir/?api=1&origin=Odaiba+Marine+Park&destination=Yakiniku+Boinboshoku+Toyocho&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
+                        ]
+                    },
+                    {
+                        number: 4,
+                        date: '12/07',
+                        weekday: 'Sunday',
+                        title: '原宿澀谷串遊',
+                        timeline: [
+                            { time: '08:00', content: '<a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank" rel="noreferrer" class="timeline-link">明治神宮外苑銀杏林</a><a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Meiji+Jingu+Gaien+Ginkgo+Avenue&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '09:30', content: '早午餐：<a href="https://maps.app.goo.gl/TAy7xajhxPRqdEoh9" target="_blank" rel="noreferrer" class="timeline-link">SHAKE SHACK Gaien</a>', isCurrent: false },
+                            { time: '10:40', content: '原宿、澀谷逛街<a href="https://www.google.com/maps/dir/?api=1&origin=Meiji+Jingu+Gaien+Ginkgo+Avenue&destination=Harajuku+Station&travelmode=walking" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '13:30', content: '午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8" target="_blank" rel="noreferrer" class="timeline-link">鮨 飛鳥</a>', isCurrent: false },
+                            { time: '15:45', content: '澀谷 SKY (記得預留置物櫃時間)', isCurrent: false },
+                            { time: '18:30', content: '六本木點燈<a href="https://www.google.com/maps/dir/?api=1&origin=SHIBUYA+SKY&destination=Roppongi+Keyakizaka+Dori&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
+                        ]
+                    },
+                    {
+                        number: 5,
+                        date: '12/08',
+                        weekday: 'Monday',
+                        title: '東京迪士尼樂園',
+                        timeline: [
+                            { time: '07:00', content: '搭乘東武巴士直達 <a href="https://www.tobu-bus.com/pc/skytree_shuttle/pdf/20240805_sk_tdr_timetable.pdf" target="_blank" rel="noreferrer" class="timeline-link">時刻表</a>', isCurrent: false },
+                            { time: '08:00', content: '入園排隊，全日體驗園區與遊行', isCurrent: false },
+                            { time: '22:00', content: '視閉園時間返程', isCurrent: false }
+                        ],
+                        notice: {
+                            type: 'notice-info',
+                            content: '建議下載官方 App 優先鎖定熱門設施的即時排隊資訊。'
+                        }
+                    },
+                    {
+                        number: 6,
+                        date: '12/09',
+                        weekday: 'Tuesday',
+                        title: '最後採買與返程',
+                        timeline: [
+                            { time: '10:00', content: '淺草散步，仲見世商店街<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Senso-ji&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '12:30', content: '午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7" target="_blank" rel="noreferrer" class="timeline-link">ちんや 浅草本店</a>', isCurrent: false },
+                            { time: '14:30', content: '晴空塔展望或購物<a href="https://www.google.com/maps/dir/?api=1&origin=Senso-ji&destination=Tokyo+Skytree&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '16:30', content: '錦糸町最後採買<a href="https://www.google.com/maps/dir/?api=1&origin=Tokyo+Skytree&destination=Kinshicho+Station&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '18:20', content: '出發前往成田<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Narita+Airport+Terminal+1&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
+                        ]
+                    }
+                ],
+
+                references: [
+                    { label: '富士山能見度', url: 'https://fuji-san.info/zh-tw/index.html' },
+                    { label: '河口湖即時影像', url: 'https://www.youtube.com/live/1cnReFAU04k' },
+                    { label: '周遊巴士資訊', url: 'https://www.fujikyubus.co.jp/shuyu' }
+                ]
+            },
+
+            mounted() {
+                this.setupScrollListener();
+                this.setupObservers();
+                this.updateCurrentTime();
+                this.timeInterval = setInterval(this.updateCurrentTime, 60000);
+            },
+
+            beforeDestroy() {
+                if (this.timeInterval) {
+                    clearInterval(this.timeInterval);
+                }
+            },
+
+            methods: {
+                setupScrollListener() {
+                    window.addEventListener('scroll', () => {
+                        // Update Active Nav Item
+                        const sections = document.querySelectorAll('section');
+                        let current = '';
+
+                        sections.forEach(section => {
+                            const sectionTop = section.offsetTop;
+                            if (window.pageYOffset >= (sectionTop - 200)) {
+                                current = section.getAttribute('id');
+                            }
+                        });
+
+                        this.activeSection = current;
+
+                        // Nav Position & Visibility Logic
+                        const nav = document.querySelector('.sticky-nav');
+                        const hero = document.querySelector('.hero');
+                        if (!nav || !hero) return;
+
+                        // Hide while scrolling
+                        this.navClasses['nav-hidden'] = true;
+
+                        // Clear existing timer
+                        if (this.isScrolling) {
+                            clearTimeout(this.isScrolling);
+                        }
+
+                        // Set timer to show after stop
+                        this.isScrolling = setTimeout(() => {
+                            this.navClasses['nav-hidden'] = false;
+                        }, 150);
+
+                        // Handle Position (Top vs Bottom)
+                        const heroBottom = hero.offsetTop + hero.offsetHeight;
+                        this.navClasses['nav-bottom'] = window.scrollY > heroBottom - 100;
+                    }, { passive: true });
+                },
+
+                setupObservers() {
+                    const setupObserver = (containerSelector, cardSelector) => {
+                        const container = document.querySelector(containerSelector);
+                        if (!container) return;
+
+                        const options = {
+                            root: container,
+                            rootMargin: '0px',
+                            threshold: 0.5
+                        };
+
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    entry.target.classList.remove('snap-inactive');
+                                } else {
+                                    entry.target.classList.add('snap-inactive');
+                                }
+                            });
+                        }, options);
+
+                        container.querySelectorAll(cardSelector).forEach(card => {
+                            observer.observe(card);
+                        });
+                    };
+
+                    setupObserver('.flight-grid', '.flight-card');
+                    setupObserver('.days-track', '.day-card');
+                },
+
+                updateCurrentTime() {
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentDay = now.getDate();
+                    let hasCurrent = false;
+
+                    // Reset all current states
+                    this.days.forEach(day => {
+                        day.timeline.forEach(item => {
+                            item.isCurrent = false;
+                        });
                     });
-                }, options);
 
-                container.querySelectorAll(cardSelector).forEach(card => {
-                    observer.observe(card);
-                });
-            };
+                    this.days.forEach(day => {
+                        const dateParts = day.date.split('/').map(s => parseInt(s.trim()));
+                        if (dateParts.length !== 2) return;
 
-            setupObserver('.flight-grid', '.flight-card');
-            setupObserver('.days-track', '.day-card');
+                        const [month, dayNum] = dateParts;
 
-            // Current Time Indicator Logic
-            const updateCurrentTime = () => {
-                const now = new Date();
-                // Uncomment to test specific time: 
-                // const now = new Date('2025-12-04T19:30:00'); 
+                        if (currentMonth === month && currentDay === dayNum) {
+                            let activeItem = null;
 
-                const currentMonth = now.getMonth() + 1;
-                const currentDay = now.getDate();
-                const currentYear = now.getFullYear();
-                let hasCurrent = false;
+                            for (let i = 0; i < day.timeline.length; i++) {
+                                const item = day.timeline[i];
+                                const [hours, minutes] = item.time.split(':').map(Number);
+                                const itemTime = new Date(now);
+                                itemTime.setHours(hours, minutes, 0, 0);
 
-                document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('current'));
+                                if (now >= itemTime) {
+                                    activeItem = item;
+                                } else {
+                                    break;
+                                }
+                            }
 
-                document.querySelectorAll('.day-card').forEach(card => {
-                    // Parse Date: "12/04" or "12 / 04"
-                    const dateMeta = card.querySelector('.day-meta span:first-child');
-                    if (!dateMeta) return;
-
-                    const dateParts = dateMeta.textContent.split('/').map(s => parseInt(s.trim()));
-                    if (dateParts.length !== 2) return;
-
-                    const [month, day] = dateParts;
-
-                    // Check if it's today (Assuming year matches or ignoring year for recurring)
-                    // Here we strictly check Month and Day. 
-                    if (currentMonth === month && currentDay === day) {
-                        const items = Array.from(card.querySelectorAll('.timeline-item'));
-                        let activeItem = null;
-
-                        for (let i = 0; i < items.length; i++) {
-                            const item = items[i];
-                            const timeEl = item.querySelector('.timeline-time');
-                            if (!timeEl) continue;
-
-                            const [hours, minutes] = timeEl.textContent.trim().split(':').map(Number);
-                            const itemTime = new Date(now);
-                            itemTime.setHours(hours, minutes, 0, 0);
-
-                            if (now >= itemTime) {
-                                activeItem = item;
-                            } else {
-                                // If we find a future item, the previous one was the current one.
-                                // Since we update activeItem as we go, we can just break or continue.
-                                // But actually, we want the *latest* item that has passed.
-                                break;
+                            if (activeItem) {
+                                activeItem.isCurrent = true;
+                                hasCurrent = true;
                             }
                         }
+                    });
 
-                        if (activeItem) {
-                            activeItem.classList.add('current');
-                            hasCurrent = true;
-                        }
-                    }
-                });
+                    this.hasCurrent = hasCurrent;
+                },
 
-                const jumpBtn = document.querySelector('.jump-to-now-btn');
-                if (jumpBtn) {
-                    if (hasCurrent) {
-                        jumpBtn.classList.add('visible');
-                    } else {
-                        jumpBtn.classList.remove('visible');
+                jumpToNow() {
+                    const currentItem = document.querySelector('.timeline-item.current');
+                    if (currentItem) {
+                        currentItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
                     }
                 }
-            };
-
-            // Update every minute
-            setInterval(updateCurrentTime, 60000);
-            updateCurrentTime();
-
-            // Jump Button Click Handler
-            document.querySelector('.jump-to-now-btn').addEventListener('click', () => {
-                const currentItem = document.querySelector('.timeline-item.current');
-                if (currentItem) {
-                    currentItem.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-                }
-            });
-        </script>
-    </body>
+            }
+        });
+    </script>
+</body>
 
 </html>
