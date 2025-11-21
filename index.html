@@ -127,37 +127,40 @@
                 <div class="section-header">
                     <span class="text-label">ACCOMMODATION</span>
                     <h2 class="section-title">住宿安排</h2>
+                    <p style="color: #888; margin-top: 8px;">左右滑動查看飯店資訊</p>
                 </div>
 
-                <div class="stay-grid">
-                    <article v-for="hotel in hotels" :key="hotel.name" class="card stay-card">
-                        <div class="stay-info">
-                            <h3>{{ hotel.name }}</h3>
-                            <p>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                                {{ hotel.dates }}
-                            </p>
-                            <p style="color: #666; font-size: 0.9rem;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                {{ hotel.address }}
-                            </p>
-                        </div>
-                        <div class="stay-action">
-                            <a :href="hotel.mapUrl" target="_blank" rel="noreferrer" class="btn btn-outline">
-                                查看地圖
-                            </a>
-                        </div>
-                    </article>
+                <div class="carousel-container">
+                    <div class="hotels-track">
+                        <article v-for="hotel in hotels" :key="hotel.name" class="hotel-card">
+                            <div class="hotel-info">
+                                <h3>{{ hotel.name }}</h3>
+                                <p>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    {{ hotel.dates }}
+                                </p>
+                                <p style="color: #666; font-size: 0.9rem;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    {{ hotel.address }}
+                                </p>
+                            </div>
+                            <div class="hotel-action">
+                                <a :href="hotel.mapUrl" target="_blank" rel="noreferrer" class="btn btn-outline">
+                                    查看地圖
+                                </a>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </section>
 
@@ -215,7 +218,7 @@
 
             <footer class="site-footer">
                 <p>© 2025 Tokyo Trip Planner · Have a nice trip</p>
-                <div class="version-tag">v.2025.11.21.1442</div>
+                <div class="version-tag">v.2025.11.21.1505</div>
             </footer>
 
         </main>
@@ -276,13 +279,17 @@
                         name: '東京錦糸町樂天城市飯店',
                         dates: '12 / 04 — 12 / 05 (1 晚)',
                         address: '4-6-1 Kinshi, Sumida-ku, Tokyo',
-                        mapUrl: 'https://maps.app.goo.gl/hyqmBvsPMQWwTPG19'
+                        mapUrl: 'https://maps.app.goo.gl/hyqmBvsPMQWwTPG19',
+                        checkIn: { month: 12, day: 4 },
+                        checkOut: { month: 12, day: 5 }
                     },
                     {
                         name: '東京錦絲町京成里士滿飯店',
                         dates: '12 / 05 — 12 / 09 (4 晚)',
                         address: '3-2-7 Kotobashi, Sumida-ku, Tokyo',
-                        mapUrl: 'https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7'
+                        mapUrl: 'https://maps.app.goo.gl/oBeHkMHEUa7UFTgG7',
+                        checkIn: { month: 12, day: 5 },
+                        checkOut: { month: 12, day: 9 }
                     }
                 ],
 
@@ -290,8 +297,8 @@
                     {
                         number: 1,
                         date: '12/04',
-                        weekday: 'Thursday',
-                        title: '抵達與錦糸町夜生活',
+                        weekday: '星期四',
+                        title: '抵達與錦糸町',
                         timeline: [
                             { time: '18:00', content: '抵達成田 NRT T1，通關取行李', isCurrent: false },
                             { time: '19:00', content: '轉乘至錦糸町（JR 總武線或京成 + 半藏門線）<a href="https://www.google.com/maps/dir/?api=1&origin=Narita+Airport+Terminal+1&destination=Kinshicho+Station&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
@@ -303,8 +310,8 @@
                     {
                         number: 2,
                         date: '12/05',
-                        weekday: 'Friday',
-                        title: '河口湖周遊日',
+                        weekday: '星期五',
+                        title: '去看富士山',
                         timeline: [
                             { time: '06:00', content: '起床，退房並寄放行李於飯店', isCurrent: false },
                             { time: '07:07', content: '搭乘富士迴遊（錦糸町 → 下吉田）', isCurrent: false },
@@ -313,7 +320,7 @@
                             { time: '14:00', content: '<a href="https://www.fujigokokisen.jp/contents/appare/?utm_source=goodlucktrip" target="_blank" rel="noreferrer" class="timeline-link">河口湖遊覽船</a>', isCurrent: false },
                             { time: '14:50', content: '大石公園／<a href="https://maps.app.goo.gl/pHqFd1Labxfqv4EH6" target="_blank" rel="noreferrer" class="timeline-link">BRAND NEW DAY</a>', isCurrent: false },
                             { time: '17:40', content: '富士迴遊回新宿', isCurrent: false },
-                            { time: '19:00', content: '晚餐：<a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank" rel="noreferrer" class="timeline-link">牛舌的檸檬</a>', isCurrent: false }
+                            { time: '21:00', content: '(已訂位)晚餐：<a href="https://maps.app.goo.gl/R1tGweKFhmNhrq57A" target="_blank" rel="noreferrer" class="timeline-link">牛舌的檸檬</a>', isCurrent: false }
                         ],
                         notice: {
                             type: 'notice-info',
@@ -323,27 +330,27 @@
                     {
                         number: 3,
                         date: '12/06',
-                        weekday: 'Saturday',
+                        weekday: '星期六',
                         title: '築地 · 銀座 · 台場',
                         timeline: [
                             { time: '08:00', content: '築地市場吃海味早餐<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Tsukiji+Outer+Market&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
                             { time: '10:20', content: '銀座購物與咖啡時間<a href="https://www.google.com/maps/dir/?api=1&origin=Tsukiji+Outer+Market&destination=Ginza+Station&travelmode=walking" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
-                            { time: '14:00', content: '<a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank" rel="noreferrer" class="timeline-link">teamLab Planets</a><a href="https://www.google.com/maps/dir/?api=1&origin=Ginza+Station&destination=teamLab+Planets+TOKYO&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
+                            { time: '14:00', content: '<a href="https://maps.app.goo.gl/huRDR7dqcbenHcqZ6" target="_blank" rel="noreferrer" class="timeline-link">teamLab Planets</a><a href="https://www.google.com/maps/dir/?api=1&origin=Ginza+Station&destination=teamLab+Planets+TOKYO&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a><br>(已預訂14:00~14:30進場)', isCurrent: false },
                             { time: '17:00', content: '台場逛逛<a href="https://www.google.com/maps/dir/?api=1&origin=teamLab+Planets+TOKYO&destination=Odaiba+Marine+Park&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
                             { time: '19:00', content: '<a href="https://www.tokyo-odaiba.net/rainbow2025/" target="_blank" rel="noreferrer" class="timeline-link">台場花火大會</a>', isCurrent: false },
-                            { time: '20:30', content: '晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank" rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a><a href="https://www.google.com/maps/dir/?api=1&origin=Odaiba+Marine+Park&destination=Yakiniku+Boinboshoku+Toyocho&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
+                            { time: '20:30', content: '(已訂位)晚餐：<a href="https://maps.app.goo.gl/owa6WqTHUQmdU3Ju8" target="_blank" rel="noreferrer" class="timeline-link">大衆焼肉 暴飲暴食</a><a href="https://www.google.com/maps/dir/?api=1&origin=Odaiba+Marine+Park&destination=Yakiniku+Boinboshoku+Toyocho&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
                         ]
                     },
                     {
                         number: 4,
                         date: '12/07',
-                        weekday: 'Sunday',
-                        title: '原宿澀谷串遊',
+                        weekday: '星期日',
+                        title: '原宿澀谷串燒',
                         timeline: [
                             { time: '08:00', content: '<a href="https://maps.app.goo.gl/ragAieeUefJFVRXKA" target="_blank" rel="noreferrer" class="timeline-link">明治神宮外苑銀杏林</a><a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Meiji+Jingu+Gaien+Ginkgo+Avenue&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
                             { time: '09:30', content: '早午餐：<a href="https://maps.app.goo.gl/TAy7xajhxPRqdEoh9" target="_blank" rel="noreferrer" class="timeline-link">SHAKE SHACK Gaien</a>', isCurrent: false },
                             { time: '10:40', content: '原宿、澀谷逛街<a href="https://www.google.com/maps/dir/?api=1&origin=Meiji+Jingu+Gaien+Ginkgo+Avenue&destination=Harajuku+Station&travelmode=walking" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
-                            { time: '13:30', content: '午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8" target="_blank" rel="noreferrer" class="timeline-link">鮨 飛鳥</a>', isCurrent: false },
+                            { time: '13:30', content: '(已訂位)午餐：<a href="https://maps.app.goo.gl/y32925ce6rFupxpY8" target="_blank" rel="noreferrer" class="timeline-link">鮨 飛鳥</a>', isCurrent: false },
                             { time: '15:45', content: '澀谷 SKY (記得預留置物櫃時間)', isCurrent: false },
                             { time: '18:30', content: '六本木點燈<a href="https://www.google.com/maps/dir/?api=1&origin=SHIBUYA+SKY&destination=Roppongi+Keyakizaka+Dori&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
                         ]
@@ -351,7 +358,7 @@
                     {
                         number: 5,
                         date: '12/08',
-                        weekday: 'Monday',
+                        weekday: '星期一',
                         title: '東京迪士尼樂園',
                         timeline: [
                             { time: '07:00', content: '搭乘東武巴士直達 <a href="https://www.tobu-bus.com/pc/skytree_shuttle/pdf/20240805_sk_tdr_timetable.pdf" target="_blank" rel="noreferrer" class="timeline-link">時刻表</a>', isCurrent: false },
@@ -366,11 +373,11 @@
                     {
                         number: 6,
                         date: '12/09',
-                        weekday: 'Tuesday',
-                        title: '最後採買與返程',
+                        weekday: '星期二',
+                        title: '淺草 · 晴空塔',
                         timeline: [
                             { time: '10:00', content: '淺草散步，仲見世商店街<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Senso-ji&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
-                            { time: '12:30', content: '午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7" target="_blank" rel="noreferrer" class="timeline-link">ちんや 浅草本店</a>', isCurrent: false },
+                            { time: '12:30', content: '(已訂位)午餐：<a href="https://maps.app.goo.gl/8c8FCFXMpWzMc5qf7" target="_blank" rel="noreferrer" class="timeline-link">ちんや 浅草本店</a>', isCurrent: false },
                             { time: '14:30', content: '晴空塔展望或購物<a href="https://www.google.com/maps/dir/?api=1&origin=Senso-ji&destination=Tokyo+Skytree&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
                             { time: '16:30', content: '錦糸町最後採買<a href="https://www.google.com/maps/dir/?api=1&origin=Tokyo+Skytree&destination=Kinshicho+Station&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false },
                             { time: '18:20', content: '出發前往成田<a href="https://www.google.com/maps/dir/?api=1&origin=Kinshicho+Station&destination=Narita+Airport+Terminal+1&travelmode=transit" target="_blank" class="transit-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>導航</a>', isCurrent: false }
@@ -397,6 +404,11 @@
                 this.setupObservers();
                 this.updateCurrentTime();
                 this.timeInterval = setInterval(this.updateCurrentTime, 60000);
+
+                // Scroll to current hotel after a short delay to ensure DOM is ready
+                setTimeout(() => {
+                    this.scrollToCurrentHotel();
+                }, 100);
             },
 
             beforeDestroy() {
@@ -473,6 +485,7 @@
 
                     setupObserver('.flight-grid', '.flight-card');
                     setupObserver('.days-track', '.day-card');
+                    setupObserver('.hotels-track', '.hotel-card');
                 },
 
                 updateCurrentTime() {
@@ -518,6 +531,37 @@
                     });
 
                     this.hasCurrent = hasCurrent;
+                },
+
+                scrollToCurrentHotel() {
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentDay = now.getDate();
+
+                    // Find the hotel that matches current date
+                    let currentHotelIndex = -1;
+                    this.hotels.forEach((hotel, index) => {
+                        const checkInDate = new Date(now.getFullYear(), hotel.checkIn.month - 1, hotel.checkIn.day);
+                        const checkOutDate = new Date(now.getFullYear(), hotel.checkOut.month - 1, hotel.checkOut.day);
+                        const currentDate = new Date(now.getFullYear(), currentMonth - 1, currentDay);
+
+                        // Check if current date is within hotel stay period (inclusive of check-in, exclusive of check-out)
+                        if (currentDate >= checkInDate && currentDate < checkOutDate) {
+                            currentHotelIndex = index;
+                        }
+                    });
+
+                    // Scroll to the current hotel if found
+                    if (currentHotelIndex !== -1) {
+                        const hotelCards = document.querySelectorAll('.hotel-card');
+                        if (hotelCards[currentHotelIndex]) {
+                            hotelCards[currentHotelIndex].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'center'
+                            });
+                        }
+                    }
                 },
 
                 jumpToNow() {
