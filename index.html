@@ -218,7 +218,7 @@
 
             <footer class="site-footer">
                 <p>© 2025 Tokyo Trip Planner · Have a nice trip</p>
-                <div class="version-tag">v.2025.11.21.1505</div>
+                <div class="version-tag">v.2025.11.21.1512</div>
             </footer>
 
         </main>
@@ -236,6 +236,7 @@
                     'nav-bottom': false
                 },
                 isScrolling: null,
+                lastScrollY: 0,
                 hasCurrent: false,
 
                 navItems: [
@@ -420,6 +421,8 @@
             methods: {
                 setupScrollListener() {
                     window.addEventListener('scroll', () => {
+                        const currentScrollY = window.scrollY;
+
                         // Update Active Nav Item
                         const sections = document.querySelectorAll('section');
                         let current = '';
@@ -438,18 +441,31 @@
                         const hero = document.querySelector('.hero');
                         if (!nav || !hero) return;
 
-                        // Hide while scrolling
-                        this.navClasses['nav-hidden'] = true;
+                        // Determine scroll direction
+                        const scrollingDown = currentScrollY > this.lastScrollY;
+                        const scrollingUp = currentScrollY < this.lastScrollY;
 
-                        // Clear existing timer
+                        // Show navbar when scrolling up, hide when scrolling down
+                        if (scrollingDown && currentScrollY > 100) {
+                            this.navClasses['nav-hidden'] = true;
+                        } else if (scrollingUp || currentScrollY <= 100) {
+                            this.navClasses['nav-hidden'] = false;
+                        }
+
+                        // Clear existing timeout
                         if (this.isScrolling) {
                             clearTimeout(this.isScrolling);
                         }
 
-                        // Set timer to show after stop
+                        // Set a timeout to show navbar when scrolling stops
                         this.isScrolling = setTimeout(() => {
-                            this.navClasses['nav-hidden'] = false;
+                            if (currentScrollY > 100) {
+                                this.navClasses['nav-hidden'] = false;
+                            }
                         }, 150);
+
+                        // Update last scroll position
+                        this.lastScrollY = currentScrollY;
 
                         // Handle Position (Top vs Bottom)
                         const heroBottom = hero.offsetTop + hero.offsetHeight;
