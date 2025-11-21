@@ -43,7 +43,27 @@
         <div id="date-scroller" class="weather-date-scroller"></div>
     </div>
 
-    <div id="spot-list" class="weather-spot-list"></div>
+    <div class="spot-list-container">
+        <div class="spot-list-header">
+            <div class="spot-list-title">景點列表</div>
+            <button id="spot-toggle-btn" class="spot-toggle-btn">展開</button>
+        </div>
+        <div id="spot-list" class="weather-spot-list collapsed"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('spot-toggle-btn');
+            const spotList = document.getElementById('spot-list');
+
+            if (toggleBtn && spotList) {
+                toggleBtn.addEventListener('click', () => {
+                    spotList.classList.toggle('collapsed');
+                    toggleBtn.textContent = spotList.classList.contains('collapsed') ? '展開' : '收合';
+                });
+            }
+        });
+    </script>
 
     <div id="map"></div>
     <div class="map-note">Data source: Open-Meteo.com</div>
@@ -59,6 +79,7 @@
             { name: "新倉山淺間神社", lat: 35.5005, lng: 138.8014 },
             { name: "晴空塔", lat: 35.7101, lng: 139.8107 },
             { name: "澀谷SKY", lat: 35.6583, lng: 139.7023 },
+            { name: "御台場海濱公園", lat: 35.6300, lng: 139.7760 },
         ];
 
         // 天氣代碼轉換
@@ -141,6 +162,12 @@
             renderDateSelector();
             renderSpotList();
             updateMapMarkers(0);
+
+            // Center map on selected spot
+            const selectedSpot = spots.find(s => s.name === selectedSpotName);
+            if (selectedSpot) {
+                map.setView([selectedSpot.lat, selectedSpot.lng], 14);
+            }
         }
 
         // 5. 日期選單

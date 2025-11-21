@@ -1255,3 +1255,86 @@ body.weather-page {
 .weather-spot-item:nth-child(8) {
     animation-delay: 0.65s;
 }
+
+/* --- Spot List Toggle --- */
+.spot-list-container {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--sand);
+    position: relative;
+    z-index: 90;
+    /* Below header (1000) but above map (1) */
+    transition: background 0.3s ease;
+}
+
+.spot-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+}
+
+.spot-list-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.spot-list-title::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.spot-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--sand);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.spot-toggle-btn:hover {
+    background: var(--white);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Override/Adjust existing weather-spot-list for the toggle container */
+.weather-spot-list {
+    margin: 0 !important;
+    /* Override previous margin */
+    padding-top: 0 !important;
+    padding-bottom: 16px !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 1000px;
+    /* Increased to accommodate wrapped items */
+    opacity: 1;
+    transform: translateY(0);
+
+    /* Show all items (wrap instead of scroll) */
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+}
+
+.weather-spot-list.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-bottom: 0 !important;
+    transform: translateY(-10px);
+    pointer-events: none;
+    visibility: hidden;
+    /* Ensure it doesn't block clicks */
+}
