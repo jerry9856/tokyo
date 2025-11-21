@@ -947,12 +947,13 @@ body.weather-page {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Noto Sans TC', sans-serif;
+    transform: translateY(calc(-100% - 12px));
+    transform-origin: bottom center;
 }
 
 .weather-marker.selected {
     border-color: var(--accent);
     background: var(--white);
-    transform: scale(1.1);
     z-index: 1000 !important;
     box-shadow: var(--shadow-lg);
 }

@@ -51,11 +51,11 @@
     <script>
         // 1. 景點經緯度
         const spots = [
-            { name: "錦糸町車站", lat: 35.6960, lng: 139.8140 },
+            { name: "錦糸町車站", lat: 35.6965, lng: 139.8126 },
             { name: "迪士尼樂園", lat: 35.6329, lng: 139.8804 },
             { name: "河口湖車站", lat: 35.4982, lng: 138.7686 },
             { name: "大石公園", lat: 35.5228, lng: 138.7455 },
-            { name: "下吉田車站", lat: 35.4886, lng: 138.8055 },
+            { name: "下吉田車站", lat: 35.4977, lng: 138.8032 },
             { name: "新倉山淺間神社", lat: 35.5005, lng: 138.8014 },
             { name: "晴空塔", lat: 35.7101, lng: 139.8107 },
             { name: "澀谷SKY", lat: 35.6583, lng: 139.7023 },
@@ -90,7 +90,7 @@
         let markersLayer = L.layerGroup().addTo(map);
         let globalForecastData = [];
         let currentDayIndex = 0;
-        let selectedSpotName = null;
+        let selectedSpotName = localStorage.getItem('selectedSpotName') || spots[0].name;
 
         // 3. 抓取資料
         async function fetchWeatherData() {
@@ -177,6 +177,7 @@
                         selectedSpotName = spot.name;
                         map.setView([spot.lat, spot.lng], 14);
                     }
+                    localStorage.setItem('selectedSpotName', selectedSpotName || '');
                     updateSpotListUI();
                     updateMapMarkers(currentDayIndex);
                 });
@@ -216,8 +217,8 @@
                                 <div class="wm-rain">☔ 降雨 ${w.pop}%</div>
                             </div>
                         `,
-                        iconSize: [140, 120],
-                        iconAnchor: [70, 120]
+                        iconSize: [140, 0],
+                        iconAnchor: [70, 0]
                     });
                 } else {
                     icon = L.divIcon({
@@ -232,6 +233,7 @@
 
                 marker.on('click', function () {
                     selectedSpotName = spotName;
+                    localStorage.setItem('selectedSpotName', selectedSpotName);
                     updateSpotListUI();
                     updateMapMarkers(currentDayIndex);
                     // map.setView([w.lat, w.lng], 14); // Optional: center on click
