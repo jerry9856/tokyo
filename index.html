@@ -94,8 +94,12 @@
                                     <span>{{ flight.airline }}</span>
                                 </div>
                                 <div class="detail-item">
-                                    <label>TERMINAL</label>
-                                    <span>{{ flight.terminal }}</span>
+                                    <label>FROM TERMINAL</label>
+                                    <span>{{ flight.terminal.from }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>TO TERMINAL</label>
+                                    <span>{{ flight.terminal.to }}</span>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +215,7 @@
 
             <footer class="site-footer">
                 <p>© 2025 Tokyo Trip Planner · Have a nice trip</p>
-                <div class="version-tag">v.2025.11.21.1435</div>
+                <div class="version-tag">v.2025.11.21.1439</div>
             </footer>
 
         </main>
@@ -254,7 +258,7 @@
                         to: { code: 'NRT', time: '18:00' },
                         date: '12 / 04 (四)',
                         airline: 'Scoot 酷航',
-                        terminal: 'TPE T1 → NRT T1'
+                        terminal: { from: 'TPE T1', to: 'NRT T1' }
                     },
                     {
                         type: '回程 · INBOUND',
@@ -263,7 +267,7 @@
                         to: { code: 'TPE', time: '01:50<small>+1</small>' },
                         date: '12 / 09 (二)',
                         airline: 'Jetstar 捷星',
-                        terminal: 'NRT T3 → TPE'
+                        terminal: { from: 'NRT T3', to: 'TPE' }
                     }
                 ],
 
