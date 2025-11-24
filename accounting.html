@@ -634,7 +634,7 @@
                     this.setDefaultDateTime();
 
                     const { value: formValues } = await Swal.fire({
-                        title: '新增記帳',
+                        title: '',
                         html: `
                             <div style="text-align: left; font-size: 0.9rem;">
                                 <style>
@@ -672,7 +672,12 @@
                                         font-size: 1rem;
                                     }
                                     .swal2-actions {
-                                        margin-top: 8px !important;
+                                        position: sticky;
+                                        bottom: 0;
+                                        background: var(--white);
+                                        margin-top: 0 !important;
+                                        padding-top: 8px;
+                                        border-top: 1px solid var(--sand);
                                     }
                                     /* Currency Radio Styles */
                                     .currency-group {
@@ -721,45 +726,45 @@
                                     </div>
                                 </div>
                                 
-                                <div style="margin-bottom: 8px;">
-                                    <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">名稱</label>
-                                    <input id="swal-name" type="text" class="swal2-input" placeholder="例如：午餐、車票">
-                                </div>
+                                <div style="margin-bottom: 4px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">名稱</label>
+                                <input id="swal-name" type="text" class="swal2-input" placeholder="例如：午餐、車票">
+                            </div>
 
-                                <div style="margin-bottom: 8px;">
-                                    <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">幣別</label>
-                                    <div class="currency-group">
-                                        <div class="currency-option">
-                                            <input type="radio" name="swal-currency" id="curr-jpy" value="JPY" ${this.form.currency === 'JPY' ? 'checked' : ''}>
-                                            <label for="curr-jpy">🇯🇵 日圓 (JPY)</label>
-                                        </div>
-                                        <div class="currency-option">
-                                            <input type="radio" name="swal-currency" id="curr-twd" value="TWD" ${this.form.currency === 'TWD' ? 'checked' : ''}>
-                                            <label for="curr-twd">🇹🇼 台幣 (TWD)</label>
-                                        </div>
+                                <div style="margin-bottom: 4px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">幣別</label>
+                                <div class="currency-group">
+                                    <div class="currency-option">
+                                        <input type="radio" name="swal-currency" id="curr-jpy" value="JPY" ${this.form.currency === 'JPY' ? 'checked' : ''}>
+                                        <label for="curr-jpy">🇯🇵 日圓 (JPY)</label>
+                                    </div>
+                                    <div class="currency-option">
+                                        <input type="radio" name="swal-currency" id="curr-twd" value="TWD" ${this.form.currency === 'TWD' ? 'checked' : ''}>
+                                        <label for="curr-twd">🇹🇼 台幣 (TWD)</label>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div style="margin-bottom: 8px;">
-                                    <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">金額</label>
-                                    <input id="swal-amount" type="number" class="swal2-input" min="0" step="0.01" placeholder="0.00" readonly style="background-color: #f9f9f9;">
-                                    
-                                    <!-- 數字鍵盤 -->
-                                    <div class="num-pad-grid" id="num-pad">
-                                        <button type="button" class="num-btn" data-val="1">1</button>
-                                        <button type="button" class="num-btn" data-val="2">2</button>
-                                        <button type="button" class="num-btn" data-val="3">3</button>
-                                        <button type="button" class="num-btn" data-val="4">4</button>
-                                        <button type="button" class="num-btn" data-val="5">5</button>
-                                        <button type="button" class="num-btn" data-val="6">6</button>
-                                        <button type="button" class="num-btn" data-val="7">7</button>
-                                        <button type="button" class="num-btn" data-val="8">8</button>
-                                        <button type="button" class="num-btn" data-val="9">9</button>
-                                        <button type="button" class="num-btn" data-val=".">.</button>
-                                        <button type="button" class="num-btn" data-val="0">0</button>
-                                        <button type="button" class="num-btn action-btn" data-action="backspace">⌫</button>
-                                    </div>
+                                <div style="margin-bottom: 4px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">金額</label>
+                                <input id="swal-amount" type="number" class="swal2-input" min="0" step="0.01" placeholder="0.00" readonly style="background-color: #f9f9f9;">
+                                
+                                <!-- 數字鍵盤 -->
+                                <div class="num-pad-grid" id="num-pad">
+                                    <button type="button" class="num-btn" data-val="1">1</button>
+                                    <button type="button" class="num-btn" data-val="2">2</button>
+                                    <button type="button" class="num-btn" data-val="3">3</button>
+                                    <button type="button" class="num-btn" data-val="4">4</button>
+                                    <button type="button" class="num-btn" data-val="5">5</button>
+                                    <button type="button" class="num-btn" data-val="6">6</button>
+                                    <button type="button" class="num-btn" data-val="7">7</button>
+                                    <button type="button" class="num-btn" data-val="8">8</button>
+                                    <button type="button" class="num-btn" data-val="9">9</button>
+                                    <button type="button" class="num-btn" data-val=".">.</button>
+                                    <button type="button" class="num-btn" data-val="0">0</button>
+                                    <button type="button" class="num-btn action-btn" data-action="backspace">⌫</button>
                                 </div>
+                            </div>
                             </div>
                         `,
                         focusConfirm: false,
