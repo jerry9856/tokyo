@@ -671,6 +671,9 @@
                                         background: var(--shell);
                                         font-size: 1rem;
                                     }
+                                    .swal2-actions {
+                                        margin-top: 8px !important;
+                                    }
                                     /* Currency Radio Styles */
                                     .currency-group {
                                         display: flex;
@@ -707,7 +710,7 @@
                                         border-color: var(--accent);
                                     }
                                 </style>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                                <div class="date-time-grid">
                                     <div>
                                         <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">日期</label>
                                         <input id="swal-date" type="date" class="swal2-input" value="${this.form.date}">
@@ -718,12 +721,12 @@
                                     </div>
                                 </div>
                                 
-                                <div style="margin-bottom: 12px;">
+                                <div style="margin-bottom: 8px;">
                                     <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">名稱</label>
                                     <input id="swal-name" type="text" class="swal2-input" placeholder="例如：午餐、車票">
                                 </div>
 
-                                <div style="margin-bottom: 12px;">
+                                <div style="margin-bottom: 8px;">
                                     <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">幣別</label>
                                     <div class="currency-group">
                                         <div class="currency-option">
@@ -737,7 +740,7 @@
                                     </div>
                                 </div>
 
-                                <div style="margin-bottom: 12px;">
+                                <div style="margin-bottom: 8px;">
                                     <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">金額</label>
                                     <input id="swal-amount" type="number" class="swal2-input" min="0" step="0.01" placeholder="0.00" readonly style="background-color: #f9f9f9;">
                                     
