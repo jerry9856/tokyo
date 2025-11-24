@@ -377,7 +377,7 @@
         }
 
         .loading-overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -386,7 +386,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
+            z-index: 9999;
         }
 
         .spinner {
@@ -797,6 +797,12 @@
                                     amountInput.value = newVal;
                                 }
                             });
+                            // iOS 日期/時間輸入框會自動取得焦點，導致原生日期選擇器彈出後立即關閉
+                            // 先 blur 這兩個輸入框，讓使用者自行點擊選擇
+                            const dateInput = document.getElementById('swal-date');
+                            const timeInput = document.getElementById('swal-time');
+                            if (dateInput) dateInput.blur();
+                            if (timeInput) timeInput.blur();
                         },
                         preConfirm: () => {
                             const date = document.getElementById('swal-date').value;
