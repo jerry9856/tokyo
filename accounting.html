@@ -61,73 +61,150 @@
         }
 
         .add-expense-btn {
-            display: inline-flex;
+            position: fixed;
+            bottom: 100px;
+            right: 32px;
+            width: 64px;
+            height: 64px;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 14px 32px;
+            justify-content: center;
             background: var(--accent);
             color: var(--white);
             border: none;
-            border-radius: 999px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 300;
             transition: all 0.3s ease;
             font-family: 'Noto Sans TC', sans-serif;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(74, 47, 30, 0.3);
+            z-index: 50;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
 
         .add-expense-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            animation: none;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(74, 47, 30, 0.4);
         }
 
-        .add-expense-btn::before {
-            content: '+';
-            font-size: 1.5rem;
-            font-weight: 700;
+        .add-expense-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 手機版調整 */
+        @media (max-width: 768px) {
+            .add-expense-btn {
+                bottom: 80px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+                font-size: 1.8rem;
+            }
         }
 
 
 
         .expense-list {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .day-group {
             background: var(--white);
             border-radius: 24px;
             border: 1px solid var(--sand);
             box-shadow: var(--shadow-md);
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .day-group:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .day-header {
+            background: var(--shell);
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--sand);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-date {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .day-date-main {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .day-date-weekday {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        .day-count {
+            font-size: 0.85rem;
+            color: var(--accent);
+            opacity: 0.7;
+            font-weight: 600;
+        }
+
 
         .expense-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 32px;
+            padding: 12px 28px;
             border-bottom: 1px solid var(--shell);
             transition: background 0.2s ease;
-        }
-
-        .expense-item:hover {
-            background: var(--linen);
         }
 
         .expense-item:last-child {
             border-bottom: none;
         }
 
+        .expense-item:hover {
+            background: var(--linen);
+        }
+
         .expense-info {
             display: flex;
             gap: 24px;
             align-items: center;
+            flex: 1;
         }
 
-        .expense-date {
+        .expense-time {
             color: var(--text);
-            opacity: 0.6;
-            font-size: 0.9rem;
-            width: 100px;
+            opacity: 0.5;
+            font-size: 0.85rem;
             font-weight: 500;
+            font-family: monospace;
+            min-width: 50px;
         }
 
         .expense-name {
@@ -138,7 +215,8 @@
 
         .expense-amount {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
         }
 
         .currency-twd {
@@ -149,12 +227,88 @@
             color: #1565c0;
         }
 
+        /* Day Summary */
+        .day-summary {
+            background: var(--linen);
+            padding: 16px 28px;
+            border-top: 2px solid var(--sand);
+            display: flex;
+            gap: 40px;
+            justify-content: flex-end;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.6;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .summary-amount.jpy {
+            color: #1565c0;
+        }
+
+        .summary-amount.twd {
+            color: #2e7d32;
+        }
+
         .empty-state {
             padding: 60px 40px;
             text-align: center;
             color: var(--text);
             opacity: 0.5;
             font-size: 1rem;
+        }
+
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--shell);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--accent);
+            font-size: 0.95rem;
+            font-weight: 500;
+            opacity: 0.7;
         }
 
         /* Navbar styles are inherited from style.css */
@@ -181,27 +335,62 @@
                 </div>
             </div>
 
-            <!-- 新增記帳按鈕 -->
-            <button class="add-expense-btn" @click="showAddExpenseModal">
-                新增一筆
+            <!-- 新增記帳按鈕 (FAB) -->
+            <button class="add-expense-btn" @click="showAddExpenseModal" title="新增一筆記帳">
+                +
             </button>
 
             <!-- 記帳列表 -->
-            <div class="expense-list">
-                <div v-if="expenses.length === 0" class="empty-state">
-                    目前沒有記帳紀錄
-                </div>
-                <div v-else v-for="expense in expenses" :key="expense.id" class="expense-item">
-                    <div class="expense-info">
-                        <div class="expense-date">
-                            <div>{{ formatDate(expense.date) }}</div>
-                            <div style="font-size: 12px; color: #aaa;">{{ formatTime(expense.time) }}</div>
+            <div v-if="!isLoading && expenses.length > 0">
+                <div v-for="(group, date) in expensesByDate" :key="date" class="day-group">
+                    <!-- 日期標題 -->
+                    <div class="day-header">
+                        <div class="day-date">
+                            <div class="day-date-main">{{ formatDateFull(date) }}</div>
+                            <div class="day-date-weekday">{{ formatWeekday(date) }}</div>
                         </div>
-                        <div class="expense-name">{{ expense.item_name }}</div>
+                        <div class="day-count">{{ group.items.length }} 筆</div>
                     </div>
-                    <div class="expense-amount" :class="expense.currency === 'TWD' ? 'currency-twd' : 'currency-jpy'">
-                        {{ expense.currency === 'TWD' ? 'NT$' : '¥' }} {{ formatNumber(expense.amount) }}
+
+                    <!-- 記帳項目 -->
+                    <div class="expense-items">
+                        <div v-for="expense in group.items" :key="expense.id" class="expense-item">
+                            <div class="expense-info">
+                                <div class="expense-time">{{ formatTime(expense.time) }}</div>
+                                <div class="expense-name">{{ expense.item_name }}</div>
+                            </div>
+                            <div class="expense-amount"
+                                :class="expense.currency === 'TWD' ? 'currency-twd' : 'currency-jpy'">
+                                {{ expense.currency === 'TWD' ? 'NT$' : '¥' }} {{ formatNumber(expense.amount) }}
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- 當日總計 -->
+                    <div class="day-summary">
+                        <div v-if="group.totalJPY > 0" class="summary-item">
+                            <div class="summary-label">日圓總計</div>
+                            <div class="summary-amount jpy">¥ {{ formatNumber(group.totalJPY) }}</div>
+                        </div>
+                        <div v-if="group.totalTWD > 0" class="summary-item">
+                            <div class="summary-label">台幣總計</div>
+                            <div class="summary-amount twd">NT$ {{ formatNumber(group.totalTWD) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Loading 狀態 -->
+            <div v-if="isLoading" class="day-group">
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="loading-text">載入中...</div>
+                </div>
+            </div>
+
+            <!-- 空狀態 -->
+            <div v-else-if="expenses.length === 0" class="day-group">
+                <div class="empty-state">
+                    目前沒有記帳紀錄
                 </div>
             </div>
         </div>
@@ -219,6 +408,7 @@
             data: {
                 user: null,
                 loading: false,
+                isLoading: false,
                 expenses: [],
                 form: {
                     date: '',
@@ -231,6 +421,43 @@
             mounted() {
                 this.checkLogin();
                 this.setDefaultDateTime();
+            },
+            computed: {
+                /**
+                 * 按日期分組的記帳資料
+                 */
+                expensesByDate() {
+                    const grouped = {};
+
+                    // 按日期分組
+                    this.expenses.forEach(expense => {
+                        const date = expense.date;
+                        if (!grouped[date]) {
+                            grouped[date] = {
+                                items: [],
+                                totalJPY: 0,
+                                totalTWD: 0
+                            };
+                        }
+                        grouped[date].items.push(expense);
+
+                        // 計算總計
+                        if (expense.currency === 'JPY') {
+                            grouped[date].totalJPY += parseFloat(expense.amount);
+                        } else if (expense.currency === 'TWD') {
+                            grouped[date].totalTWD += parseFloat(expense.amount);
+                        }
+                    });
+
+                    // 按日期排序（最新的在前）
+                    const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+                    const result = {};
+                    sortedDates.forEach(date => {
+                        result[date] = grouped[date];
+                    });
+
+                    return result;
+                }
             },
             methods: {
                 checkLogin() {
@@ -248,6 +475,7 @@
                     this.form.time = now.toTimeString().slice(0, 5);
                 },
                 async loadExpenses() {
+                    this.isLoading = true;
                     try {
                         const result = await ExpenseAPI.getAll(this.user.id);
                         if (result.success) {
@@ -255,6 +483,13 @@
                         }
                     } catch (error) {
                         console.error('Failed to load expenses:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: '載入失敗',
+                            text: '無法載入記帳紀錄，請稍後再試'
+                        });
+                    } finally {
+                        this.isLoading = false;
                     }
                 },
                 async showAddExpenseModal() {
@@ -364,6 +599,16 @@
                 },
                 formatDate(dateStr) {
                     return new Date(dateStr).toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' });
+                },
+                formatDateFull(dateStr) {
+                    return new Date(dateStr).toLocaleDateString('zh-TW', {
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                },
+                formatWeekday(dateStr) {
+                    const weekdays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+                    return weekdays[new Date(dateStr).getDay()];
                 },
                 formatTime(timeStr) {
                     return timeStr.slice(0, 5);
