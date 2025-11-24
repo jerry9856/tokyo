@@ -22,7 +22,19 @@ async function apiCall(endpoint, method = 'GET', data = null) {
 
     try {
         const response = await fetch(endpoint, options);
-        const result = await response.json();
+
+        // 檢查回應是否為 JSON
+        const contentType = response.headers.get('content-type');
+        let result;
+
+        if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+        } else {
+            // 如果不是 JSON，讀取文字內容並拋出錯誤
+            const text = await response.text();
+            console.error('API 回應非 JSON:', text);
+            throw new Error('伺服器回應格式錯誤，請稍後再試');
+        }
 
         if (!response.ok) {
             throw new Error(result.error || '請求失敗');
