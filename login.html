@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 | 東京 6 日</title>
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .form-group input:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .toggle-mode {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .toggle-mode a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toggle-mode a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            color: #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>{{ isLoginMode ? '登入' : '註冊' }}</h1>
+                <p>{{ isLoginMode ? '歡迎回來！' : '建立新帳號' }}</p>
+            </div>
+
+            <!-- 登入表單 -->
+            <form v-if="isLoginMode" @submit.prevent="handleLogin">
+                <div class="form-group">
+                    <label for="login-username">使用者名稱</label>
+                    <input type="text" id="login-username" v-model="loginForm.username" required
+                        :disabled="formStatus.loading" placeholder="請輸入使用者名稱">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">密碼</label>
+                    <input type="password" id="login-password" v-model="loginForm.password" required
+                        :disabled="formStatus.loading" placeholder="請輸入密碼">
+                </div>
+
+                <button type="submit" class="btn-primary" :disabled="formStatus.loading">
+                    {{ formStatus.loading ? '登入中...' : '登入' }}
+                </button>
+            </form>
+
+            <!-- 註冊表單 -->
+            <form v-else @submit.prevent="handleRegister">
+                <div class="form-group">
+                    <label for="register-username">使用者名稱</label>
+                    <input type="text" id="register-username" v-model="registerForm.username" required
+                        :disabled="formStatus.loading" placeholder="請輸入使用者名稱">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">電子郵件（選填）</label>
+                    <input type="email" id="register-email" v-model="registerForm.email" :disabled="formStatus.loading"
+                        placeholder="請輸入電子郵件">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">密碼</label>
+                    <input type="password" id="register-password" v-model="registerForm.password" required
+                        :disabled="formStatus.loading" placeholder="請輸入密碼">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password-confirm">確認密碼</label>
+                    <input type="password" id="register-password-confirm" v-model="registerForm.passwordConfirm"
+                        required :disabled="formStatus.loading" placeholder="請再次輸入密碼">
+                </div>
+
+                <button type="submit" class="btn-primary" :disabled="formStatus.loading">
+                    {{ formStatus.loading ? '註冊中...' : '註冊' }}
+                </button>
+            </form>
+
+            <!-- 狀態訊息 -->
+            <div v-if="formStatus.message" class="message" :class="formStatus.type">
+                {{ formStatus.message }}
+            </div>
+
+            <!-- 切換登入/註冊 -->
+            <div class="toggle-mode">
+                <span v-if="isLoginMode">
+                    還沒有帳號？
+                    <a href="#" @click.prevent="toggleMode">立即註冊</a>
+                </span>
+                <span v-else>
+                    已有帳號？
+                    <a href="#" @click.prevent="toggleMode">返回登入</a>
+                </span>
+            </div>
+
+            <!-- 返回首頁 -->
+            <div class="back-link">
+                <a href="index.html">← 返回首頁</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vue 2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+    <!-- API Service & Form Mixin -->
+    <script src="js/api-service.js"></script>
+    <script src="js/form-mixin.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+
+            mixins: [FormMixin],
+
+            data: {
+                isLoginMode: true,
+
+                loginForm: {
+                    username: '',
+                    password: ''
+                },
+
+                registerForm: {
+                    username: '',
+                    email: '',
+                    password: '',
+                    passwordConfirm: ''
+                }
+            },
+
+            methods: {
+                /**
+                 * 處理登入
+                 */
+                async handleLogin() {
+                    await this.handleFormSubmit(
+                        () => UserAPI.login(this.loginForm.username, this.loginForm.password),
+                        this.loginForm,
+                        (result) => {
+                            // 儲存使用者資訊到 localStorage
+                            localStorage.setItem('user', JSON.stringify(result.data));
+
+                            // 延遲跳轉到首頁
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1000);
+                        }
+                    );
+                },
+
+                /**
+                 * 處理註冊
+                 */
+                async handleRegister() {
+                    // 驗證密碼是否一致
+                    if (this.registerForm.password !== this.registerForm.passwordConfirm) {
+                        this.setFormStatus('密碼不一致，請重新輸入', 'error');
+                        return;
+                    }
+
+                    // 驗證密碼長度
+                    if (this.registerForm.password.length < 6) {
+                        this.setFormStatus('密碼長度至少需要 6 個字元', 'error');
+                        return;
+                    }
+
+                    await this.handleFormSubmit(
+                        () => UserAPI.register(
+                            this.registerForm.username,
+                            this.registerForm.password,
+                            this.registerForm.email
+                        ),
+                        this.registerForm,
+                        () => {
+                            // 註冊成功後自動切換到登入模式
+                            this.setFormStatus('註冊成功！請登入', 'success');
+                            setTimeout(() => {
+                                this.isLoginMode = true;
+                                this.loginForm.username = this.registerForm.username;
+                                this.resetForm(this.registerForm);
+                                this.clearFormStatus();
+                            }, 1500);
+                        }
+                    );
+                },
+
+                /**
+                 * 切換登入/註冊模式
+                 */
+                toggleMode() {
+                    this.isLoginMode = !this.isLoginMode;
+                    this.clearFormStatus();
+                    this.resetForm(this.loginForm);
+                    this.resetForm(this.registerForm);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -59,6 +59,7 @@
                 </div>
             </header>
 
+
             <!-- Flights -->
             <section id="flights" class="section-spacer">
                 <div class="section-header">
@@ -226,9 +227,18 @@
 
     <!-- Vue 2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+    <!-- API Service & Form Mixin -->
+    <script src="js/api-service.js"></script>
+    <script src="js/form-mixin.js"></script>
+
     <script>
         new Vue({
             el: '#app',
+
+            // 使用 FormMixin 提供統一的表單處理
+            mixins: [FormMixin],
+
             data: {
                 activeSection: '',
                 navClasses: {
@@ -244,7 +254,8 @@
                     { id: 'stay', label: '住宿' },
                     { id: 'itinerary', label: '行程' },
                     { id: 'refs', label: '資訊' },
-                    { id: 'weather', label: '天氣', url: 'weather.html' }
+                    { id: 'weather', label: '天氣', url: 'weather.html' },
+                    { id: 'accounting', label: '記帳', url: 'accounting.html' }
                 ],
 
                 hero: {
@@ -419,6 +430,7 @@
             },
 
             methods: {
+
                 setupScrollListener() {
                     window.addEventListener('scroll', () => {
                         const currentScrollY = window.scrollY;
