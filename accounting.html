@@ -11,99 +11,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         .accounting-container {
-            max-width: 800px;
-            margin: 100px auto;
-            padding: 20px;
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 24px;
         }
 
         .accounting-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 48px;
         }
 
         .accounting-header h1 {
-            font-size: 28px;
-            color: #333;
+            font-size: 2.5rem;
+            color: var(--accent);
+            font-weight: 700;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            color: var(--accent);
+            font-weight: 500;
         }
 
         .logout-btn {
-            padding: 8px 16px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 10px 24px;
+            background: var(--white);
+            border: 1px solid var(--sand);
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 14px;
-            color: #666;
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-family: 'Noto Sans TC', sans-serif;
         }
 
         .logout-btn:hover {
-            background: #e0e0e0;
+            background: var(--accent);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
         }
 
-        .expense-form {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        .add-expense-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans TC', sans-serif;
+            box-shadow: var(--shadow-md);
             margin-bottom: 32px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-submit:hover {
+        .add-expense-btn:hover {
             transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
+
+        .add-expense-btn::before {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+
 
         .expense-list {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: var(--white);
+            border-radius: 24px;
+            border: 1px solid var(--sand);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
         }
 
@@ -111,8 +103,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 24px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--shell);
+            transition: background 0.2s ease;
+        }
+
+        .expense-item:hover {
+            background: var(--linen);
         }
 
         .expense-item:last-child {
@@ -121,24 +118,27 @@
 
         .expense-info {
             display: flex;
-            gap: 16px;
+            gap: 24px;
             align-items: center;
         }
 
         .expense-date {
-            color: #888;
-            font-size: 14px;
+            color: var(--text);
+            opacity: 0.6;
+            font-size: 0.9rem;
             width: 100px;
+            font-weight: 500;
         }
 
         .expense-name {
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1rem;
         }
 
         .expense-amount {
             font-weight: 700;
-            font-size: 18px;
+            font-size: 1.2rem;
         }
 
         .currency-twd {
@@ -150,9 +150,11 @@
         }
 
         .empty-state {
-            padding: 40px;
+            padding: 60px 40px;
             text-align: center;
-            color: #888;
+            color: var(--text);
+            opacity: 0.5;
+            font-size: 1rem;
         }
 
         /* Navbar styles are inherited from style.css */
@@ -179,39 +181,10 @@
                 </div>
             </div>
 
-            <!-- 新增記帳表單 -->
-            <div class="expense-form">
-                <form @submit.prevent="addExpense">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>日期</label>
-                            <input type="date" v-model="form.date" required>
-                        </div>
-                        <div class="form-group">
-                            <label>時間</label>
-                            <input type="time" v-model="form.time" required>
-                        </div>
-                        <div class="form-group">
-                            <label>名稱</label>
-                            <input type="text" v-model="form.itemName" placeholder="例如：午餐、車票" required>
-                        </div>
-                        <div class="form-group">
-                            <label>金額</label>
-                            <input type="number" v-model="form.amount" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label>幣別</label>
-                            <select v-model="form.currency" required>
-                                <option value="JPY">日圓 (JPY)</option>
-                                <option value="TWD">新台幣 (TWD)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" :disabled="loading">
-                        {{ loading ? '儲存中...' : '新增紀錄' }}
-                    </button>
-                </form>
-            </div>
+            <!-- 新增記帳按鈕 -->
+            <button class="add-expense-btn" @click="showAddExpenseModal">
+                新增一筆
+            </button>
 
             <!-- 記帳列表 -->
             <div class="expense-list">
@@ -237,6 +210,8 @@
     <!-- Vue 2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="js/api-service.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         new Vue({
@@ -261,7 +236,7 @@
                 checkLogin() {
                     const userStr = localStorage.getItem('user');
                     if (!userStr) {
-                        window.location.href = 'login.html';
+                        window.location.href = 'login.html?redirect=accounting.html';
                         return;
                     }
                     this.user = JSON.parse(userStr);
@@ -282,6 +257,70 @@
                         console.error('Failed to load expenses:', error);
                     }
                 },
+                async showAddExpenseModal() {
+                    this.setDefaultDateTime();
+
+                    const { value: formValues } = await Swal.fire({
+                        title: '新增記帳',
+                        html: `
+                            <div style="text-align: left;">
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--accent);">日期</label>
+                                    <input id="swal-date" type="date" class="swal2-input" value="${this.form.date}" style="width: 90%; margin: 0;">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--accent);">時間</label>
+                                    <input id="swal-time" type="time" class="swal2-input" value="${this.form.time}" style="width: 90%; margin: 0;">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--accent);">名稱</label>
+                                    <input id="swal-name" type="text" class="swal2-input" placeholder="例如：午餐、車票" style="width: 90%; margin: 0;">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--accent);">金額</label>
+                                    <input id="swal-amount" type="number" class="swal2-input" min="0" step="0.01" placeholder="0.00" style="width: 90%; margin: 0;">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--accent);">幣別</label>
+                                    <select id="swal-currency" class="swal2-input" style="width: 90%; margin: 0;">
+                                        <option value="JPY" selected>日圓 (JPY)</option>
+                                        <option value="TWD">新台幣 (TWD)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `,
+                        focusConfirm: false,
+                        showCancelButton: true,
+                        confirmButtonText: '新增',
+                        cancelButtonText: '取消',
+                        confirmButtonColor: '#4A2F1E',
+                        cancelButtonColor: '#999',
+                        width: '500px',
+                        preConfirm: () => {
+                            const date = document.getElementById('swal-date').value;
+                            const time = document.getElementById('swal-time').value;
+                            const name = document.getElementById('swal-name').value;
+                            const amount = document.getElementById('swal-amount').value;
+                            const currency = document.getElementById('swal-currency').value;
+
+                            if (!date || !time || !name || !amount) {
+                                Swal.showValidationMessage('請填寫所有欄位');
+                                return false;
+                            }
+
+                            return { date, time, name, amount, currency };
+                        }
+                    });
+
+                    if (formValues) {
+                        this.form.date = formValues.date;
+                        this.form.time = formValues.time;
+                        this.form.itemName = formValues.name;
+                        this.form.amount = formValues.amount;
+                        this.form.currency = formValues.currency;
+                        await this.addExpense();
+                    }
+                },
                 async addExpense() {
                     this.loading = true;
                     try {
@@ -295,20 +334,33 @@
                         );
 
                         if (result.success) {
-                            this.loadExpenses();
+                            await this.loadExpenses();
                             this.form.itemName = '';
                             this.form.amount = '';
-                            this.setDefaultDateTime(); // Reset time to now
+                            this.setDefaultDateTime();
+
+                            // 顯示成功訊息
+                            Swal.fire({
+                                icon: 'success',
+                                title: '新增成功！',
+                                text: '記帳紀錄已儲存',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
                         }
                     } catch (error) {
-                        alert('新增失敗: ' + error.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: '新增失敗',
+                            text: error.message
+                        });
                     } finally {
                         this.loading = false;
                     }
                 },
                 logout() {
                     localStorage.removeItem('user');
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.html?redirect=accounting.html';
                 },
                 formatDate(dateStr) {
                     return new Date(dateStr).toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' });

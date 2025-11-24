@@ -12,148 +12,216 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Override body styles for login page */
+        body {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #app {
+            width: 100%;
+            padding: 24px;
+        }
+
         .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 48px;
+            background: var(--white);
+            border: 1px solid var(--sand);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .login-header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-            color: #333;
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-weight: 700;
         }
 
         .login-header p {
-            color: #666;
-            font-size: 14px;
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 1rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
+            color: var(--accent);
+            font-size: 0.9rem;
         }
 
         .form-group input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1px solid var(--sand);
+            border-radius: 12px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+            background: var(--white);
+            color: var(--text);
+            font-family: 'Noto Sans TC', sans-serif;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
         }
 
         .form-group input:disabled {
-            background: #f5f5f5;
+            background: var(--shell);
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .btn-primary {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: var(--accent);
+            color: var(--white);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans TC', sans-serif;
         }
 
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: var(--shadow-md);
         }
 
         .btn-primary:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
         .message {
-            margin-top: 16px;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px 24px;
+            border-radius: 12px;
             text-align: center;
-            font-size: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            min-width: 300px;
+            max-width: 500px;
+            animation: slideDown 0.3s ease-out;
+            pointer-events: auto;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.success {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: rgba(239, 233, 227, 0.95);
+            color: var(--accent);
+            border: 1px solid var(--sand);
         }
 
         .message.error {
-            background: #ffebee;
-            color: #c62828;
+            background: rgba(255, 245, 245, 0.95);
+            color: #C53030;
+            border: 1px solid #E53E3E;
         }
 
         .message.info {
-            background: #e3f2fd;
-            color: #1565c0;
+            background: rgba(239, 233, 227, 0.95);
+            color: var(--accent);
+            border: 1px solid var(--sand);
         }
 
         .toggle-mode {
             text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
+            margin-top: 24px;
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9rem;
         }
 
         .toggle-mode a {
-            color: #667eea;
+            color: var(--accent);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
         }
 
         .toggle-mode a:hover {
-            text-decoration: underline;
+            opacity: 0.7;
         }
 
         .back-link {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 32px;
         }
 
         .back-link a {
-            color: #666;
+            color: var(--text);
+            opacity: 0.6;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
         .back-link a:hover {
-            color: #667eea;
+            color: var(--accent);
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
+        <!-- 狀態訊息 (浮動視窗) -->
+        <div class="toast-container">
+            <div v-if="formStatus.message" class="message" :class="formStatus.type">
+                {{ formStatus.message }}
+            </div>
+        </div>
+
         <div class="login-container">
             <div class="login-header">
                 <h1>{{ isLoginMode ? '登入' : '註冊' }}</h1>
-                <p>{{ isLoginMode ? '歡迎回來！' : '建立新帳號' }}</p>
             </div>
 
             <!-- 登入表單 -->
@@ -206,10 +274,7 @@
                 </button>
             </form>
 
-            <!-- 狀態訊息 -->
-            <div v-if="formStatus.message" class="message" :class="formStatus.type">
-                {{ formStatus.message }}
-            </div>
+
 
             <!-- 切換登入/註冊 -->
             <div class="toggle-mode">
@@ -271,9 +336,13 @@
                             // 儲存使用者資訊到 localStorage
                             localStorage.setItem('user', JSON.stringify(result.data));
 
-                            // 延遲跳轉到首頁
+                            // 檢查是否有 redirect 參數
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const redirectTo = urlParams.get('redirect') || 'index.html';
+
+                            // 延遲跳轉
                             setTimeout(() => {
-                                window.location.href = 'index.html';
+                                window.location.href = redirectTo;
                             }, 1000);
                         }
                     );
