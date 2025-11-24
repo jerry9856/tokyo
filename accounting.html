@@ -14,9 +14,14 @@
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
+        /* Override body padding for this page */
+        body {
+            padding-top: 40px;
+        }
+
         .accounting-container {
             max-width: 900px;
-            margin: 60px auto;
+            margin: 0 auto 60px;
             padding: 0 24px;
         }
 
@@ -227,6 +232,76 @@
             color: #1565c0;
         }
 
+        .expense-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #e53e3e;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            opacity: 0;
+            transform: translateX(10px);
+        }
+
+        .expense-item:hover .delete-btn {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .delete-btn:hover {
+            background: #fff5f5;
+        }
+
+        /* Swipe to Delete Styles */
+        .expense-item-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--shell);
+        }
+
+        .expense-item-wrapper:last-child {
+            border-bottom: none;
+        }
+
+        .expense-item {
+            position: relative;
+            z-index: 2;
+            background: var(--white);
+            transition: transform 0.2s ease-out;
+            border-bottom: none;
+            /* Moved to wrapper */
+        }
+
+        .swipe-delete-action {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            background: #e53e3e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        /* Hide desktop delete button on mobile if swiped */
+        @media (max-width: 768px) {
+            .delete-btn {
+                display: none;
+            }
+        }
+
         /* Day Summary */
         .day-summary {
             background: var(--linen);
@@ -354,14 +429,45 @@
 
                     <!-- 記帳項目 -->
                     <div class="expense-items">
-                        <div v-for="expense in group.items" :key="expense.id" class="expense-item">
-                            <div class="expense-info">
-                                <div class="expense-time">{{ formatTime(expense.time) }}</div>
-                                <div class="expense-name">{{ expense.item_name }}</div>
+                        <div v-for="expense in group.items" :key="expense.id" class="expense-item-wrapper">
+                            <!-- 左滑出現的刪除按鈕 -->
+                            <div class="swipe-delete-action" @click="deleteExpense(expense.id)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
+                                </svg>
                             </div>
-                            <div class="expense-amount"
-                                :class="expense.currency === 'TWD' ? 'currency-twd' : 'currency-jpy'">
-                                {{ expense.currency === 'TWD' ? 'NT$' : '¥' }} {{ formatNumber(expense.amount) }}
+
+                            <!-- 主要內容 -->
+                            <div class="expense-item"
+                                :style="{ transform: activeSwipeId === expense.id ? 'translateX(-80px)' : 'translateX(0)' }"
+                                @touchstart="handleTouchStart($event, expense.id)" @touchend="handleTouchEnd($event)"
+                                @click="handleItemClick(expense.id)">
+                                <div class="expense-info">
+                                    <div class="expense-time">{{ formatTime(expense.time) }}</div>
+                                    <div class="expense-name">{{ expense.item_name }}</div>
+                                </div>
+                                <div class="expense-actions">
+                                    <div class="expense-amount"
+                                        :class="expense.currency === 'TWD' ? 'currency-twd' : 'currency-jpy'">
+                                        {{ expense.currency === 'TWD' ? 'NT$' : '¥' }} {{ formatNumber(expense.amount)
+                                        }}
+                                    </div>
+                                    <button class="delete-btn" @click.stop="deleteExpense(expense.id)" title="刪除">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -416,7 +522,12 @@
                     itemName: '',
                     amount: '',
                     currency: 'JPY'
-                }
+                },
+                // 觸控滑動相關
+                touchStartX: 0,
+                touchStartY: 0,
+                currentTouchId: null,
+                activeSwipeId: null
             },
             mounted() {
                 this.checkLogin();
@@ -557,6 +668,15 @@
                     }
                 },
                 async addExpense() {
+                    // 顯示 Loading
+                    Swal.fire({
+                        title: '儲存中...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
                     this.loading = true;
                     try {
                         const result = await ExpenseAPI.create(
@@ -591,6 +711,74 @@
                         });
                     } finally {
                         this.loading = false;
+                    }
+                },
+                async deleteExpense(id) {
+                    // 顯示 Loading Toast
+                    Swal.fire({
+                        title: '刪除中...',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    try {
+                        const apiResult = await ExpenseAPI.delete(id);
+                        if (apiResult.success) {
+                            await this.loadExpenses();
+                            // 顯示自動消失的成功訊息
+                            Swal.fire({
+                                icon: 'success',
+                                title: '已刪除',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                toast: true,
+                                position: 'top-end'
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Failed to delete expense:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: '刪除失敗',
+                            text: '無法刪除記帳紀錄，請稍後再試'
+                        });
+                    }
+                },
+                handleTouchStart(e, id) {
+                    this.touchStartX = e.touches[0].clientX;
+                    this.touchStartY = e.touches[0].clientY;
+                    this.currentTouchId = id;
+                },
+                handleTouchEnd(e) {
+                    if (!this.currentTouchId) return;
+
+                    const deltaX = e.changedTouches[0].clientX - this.touchStartX;
+                    const deltaY = e.changedTouches[0].clientY - this.touchStartY;
+
+                    // 判斷是否為水平滑動（X軸移動大於Y軸）且距離足夠（大於50px）
+                    if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                        if (deltaX < 0) {
+                            // 向左滑，顯示刪除
+                            this.activeSwipeId = this.currentTouchId;
+                        } else {
+                            // 向右滑，關閉
+                            if (this.activeSwipeId === this.currentTouchId) {
+                                this.activeSwipeId = null;
+                            }
+                        }
+                    }
+
+                    this.currentTouchId = null;
+                },
+                handleItemClick(id) {
+                    // 點擊項目時，如果該項目已滑開，則關閉
+                    // 如果點擊其他項目，且有項目滑開，也關閉
+                    if (this.activeSwipeId) {
+                        this.activeSwipeId = null;
                     }
                 },
                 logout() {

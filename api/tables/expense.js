@@ -50,6 +50,28 @@ export default async function handler(request, response) {
             });
         }
 
+        // DELETE /api/tables/expense - 刪除費用記錄
+        if (request.method === 'DELETE') {
+            const { id } = request.query;
+
+            if (!id) {
+                return response.status(400).json({
+                    success: false,
+                    error: '缺少 ID'
+                });
+            }
+
+            await sql`
+                DELETE FROM expenses
+                WHERE id = ${id}
+            `;
+
+            return response.status(200).json({
+                success: true,
+                message: '刪除成功'
+            });
+        }
+
         return response.status(405).json({
             success: false,
             error: 'Method not allowed'

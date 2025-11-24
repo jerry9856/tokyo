@@ -57,7 +57,11 @@ const ExpenseAPI = {
 
     // 取得費用記錄列表
     getAll: (userId) =>
-        apiCall(`/api/tables/expense?userId=${userId}`, 'GET')
+        apiCall(`/api/tables/expense?userId=${userId}`, 'GET'),
+
+    // 刪除費用記錄
+    delete: (id) =>
+        apiCall(`/api/tables/expense?id=${id}`, 'DELETE')
 };
 
 /**
