@@ -17,6 +17,8 @@
         /* Override body padding for this page */
         body {
             padding-top: 40px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f1eb 100%);
+            min-height: 100vh;
         }
 
         .accounting-container {
@@ -24,6 +26,19 @@
             margin: 0 auto 60px;
             padding: 0 24px;
             position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .accounting-header {
@@ -31,12 +46,42 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 48px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .accounting-header h1 {
             font-size: 2.5rem;
-            color: var(--accent);
+            background: linear-gradient(135deg, #4A2F1E 0%, #8B6F47 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-weight: 700;
+            text-shadow: 0 2px 10px rgba(74, 47, 30, 0.1);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(1.1);
+            }
         }
 
         .header-left {
@@ -51,18 +96,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--white);
-            border: 1px solid var(--sand);
+            background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+            border: 2px solid var(--sand);
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: var(--accent);
+            box-shadow: 0 2px 8px rgba(74, 47, 30, 0.1),
+                0 1px 3px rgba(74, 47, 30, 0.08);
         }
 
         .refresh-btn:hover {
-            background: var(--shell);
+            background: linear-gradient(135deg, #4A2F1E 0%, #8B6F47 100%);
+            color: white;
             border-color: var(--accent);
-            transform: rotate(180deg);
+            transform: rotate(180deg) scale(1.05);
+            box-shadow: 0 4px 16px rgba(74, 47, 30, 0.25),
+                0 2px 8px rgba(74, 47, 30, 0.15);
         }
 
         .refresh-btn:active {
@@ -102,21 +152,30 @@
 
         .logout-btn {
             padding: 10px 24px;
-            background: var(--white);
-            border: 1px solid var(--sand);
+            background: linear-gradient(135deg, #ffffff 0%, #faf8f5 100%);
+            border: 2px solid var(--sand);
             border-radius: 999px;
             cursor: pointer;
             font-size: 0.9rem;
             color: var(--accent);
             font-weight: 600;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Noto Sans TC', sans-serif;
+            box-shadow: 0 2px 8px rgba(74, 47, 30, 0.1),
+                0 1px 3px rgba(74, 47, 30, 0.08);
         }
 
         .logout-btn:hover {
-            background: var(--accent);
+            background: linear-gradient(135deg, #4A2F1E 0%, #8B6F47 100%);
             color: var(--white);
-            box-shadow: var(--shadow-sm);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 47, 30, 0.25),
+                0 3px 10px rgba(74, 47, 30, 0.15);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
         }
 
         .add-expense-btn {
@@ -128,36 +187,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--accent);
+            background: linear-gradient(135deg, #4A2F1E 0%, #8B6F47 100%);
             color: var(--white);
             border: none;
             border-radius: 50%;
             cursor: pointer;
             font-size: 2rem;
             font-weight: 300;
-            transition: all 0.3s ease;
             font-family: 'Noto Sans TC', sans-serif;
-            box-shadow: 0 4px 12px rgba(74, 47, 30, 0.3);
+            box-shadow: 0 8px 24px rgba(74, 47, 30, 0.35),
+                0 4px 12px rgba(74, 47, 30, 0.25);
             z-index: 50;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-8px);
-            }
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .add-expense-btn:hover {
-            animation: none;
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(74, 47, 30, 0.4);
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 12px 40px rgba(74, 47, 30, 0.45),
+                0 6px 20px rgba(74, 47, 30, 0.35);
         }
 
         .add-expense-btn:active {
@@ -184,26 +232,80 @@
         }
 
         .day-group {
-            background: var(--white);
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
             border-radius: 24px;
-            border: 1px solid var(--sand);
-            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(212, 193, 165, 0.3);
+            box-shadow: 0 4px 20px rgba(74, 47, 30, 0.08),
+                0 2px 8px rgba(74, 47, 30, 0.05),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardSlideIn 0.5s ease-out backwards;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 為每個卡片添加延遲動畫 */
+        .day-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .day-group:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .day-group:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .day-group:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .day-group:nth-child(5) {
+            animation-delay: 0.5s;
         }
 
         .day-group:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 40px rgba(74, 47, 30, 0.15),
+                0 6px 20px rgba(74, 47, 30, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+            border-color: rgba(212, 193, 165, 0.5);
         }
 
         .day-header {
-            background: var(--shell);
+            background: linear-gradient(135deg, #F5EFE6 0%, #FAF8F5 100%);
             padding: 16px 28px;
-            border-bottom: 1px solid var(--sand);
+            border-bottom: 2px solid rgba(212, 193, 165, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(139, 111, 71, 0.3) 50%,
+                    transparent 100%);
         }
 
         .day-date {
@@ -238,16 +340,36 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 28px;
-            border-bottom: 1px solid var(--shell);
-            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(245, 239, 230, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .expense-item:last-child {
             border-bottom: none;
         }
 
+        .expense-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(135deg, #4A2F1E 0%, #8B6F47 100%);
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .expense-item:hover {
-            background: var(--linen);
+            background: linear-gradient(90deg,
+                    rgba(250, 248, 245, 0.5) 0%,
+                    rgba(245, 239, 230, 0.3) 100%);
+            transform: translateX(4px);
+        }
+
+        .expense-item:hover::before {
+            transform: scaleY(1);
         }
 
         .expense-info {
@@ -264,26 +386,51 @@
             font-weight: 500;
             font-family: monospace;
             min-width: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .expense-item:hover .expense-time {
+            opacity: 0.7;
+            transform: translateX(2px);
         }
 
         .expense-name {
             font-weight: 600;
             color: var(--accent);
             font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .expense-item:hover .expense-name {
+            color: #8B6F47;
         }
 
         .expense-amount {
             font-weight: 700;
             font-size: 1.1rem;
             font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .expense-item:hover .expense-amount {
+            transform: scale(1.05);
         }
 
         .currency-twd {
             color: #2e7d32;
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .currency-jpy {
             color: #1565c0;
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .expense-actions {
@@ -299,18 +446,24 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
-            transform: translateX(10px);
+            transform: translateX(10px) scale(0.8);
         }
 
         .expense-item:hover .delete-btn {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0) scale(1);
         }
 
         .delete-btn:hover {
-            background: #fff5f5;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            transform: translateX(0) scale(1.1) rotate(10deg);
+            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.2);
+        }
+
+        .delete-btn:active {
+            transform: translateX(0) scale(0.9);
         }
 
         /* SweetAlert2 Customization */
@@ -373,12 +526,27 @@
 
         /* Day Summary */
         .day-summary {
-            background: var(--linen);
+            background: linear-gradient(135deg, #FAF8F5 0%, #F5EFE6 100%);
             padding: 16px 28px;
-            border-top: 2px solid var(--sand);
+            border-top: 2px solid rgba(212, 193, 165, 0.3);
             display: flex;
             gap: 40px;
             justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(139, 111, 71, 0.2) 50%,
+                    transparent 100%);
         }
 
         .summary-item {
@@ -386,6 +554,11 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .summary-item:hover {
+            transform: scale(1.05);
         }
 
         .summary-label {
@@ -401,14 +574,27 @@
             font-size: 1.3rem;
             font-weight: 700;
             font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .summary-item:hover .summary-amount {
+            transform: scale(1.1);
+            filter: brightness(1.1);
         }
 
         .summary-amount.jpy {
-            color: #1565c0;
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .summary-amount.twd {
-            color: #2e7d32;
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .empty-state {
@@ -503,11 +689,6 @@
                 </div>
             </div>
 
-            <!-- 新增記帳按鈕 (FAB) -->
-            <button class="add-expense-btn" @click="showAddExpenseModal" title="新增一筆記帳">
-                +
-            </button>
-
             <!-- 記帳列表 -->
             <div v-if="!isLoading && expenses.length > 0">
                 <div v-for="(group, date) in expensesByDate" :key="date" class="day-group">
@@ -591,6 +772,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- 新增記帳按鈕 (FAB) -->
+        <button class="add-expense-btn" @click="showAddExpenseModal" title="新增一筆記帳">
+            +
+        </button>
     </div>
 
     <!-- Vue 2 CDN -->
