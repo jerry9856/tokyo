@@ -1188,6 +1188,15 @@
                         cancelButtonColor: '#999',
                         width: '500px',
                         didOpen: () => {
+                            // 防止 iPhone 自動打開日期選單
+                            const dateInput = document.getElementById('swal-date');
+                            const timeInput = document.getElementById('swal-time');
+                            if (dateInput) dateInput.blur();
+                            if (timeInput) timeInput.blur();
+                            
+                            // 移除所有輸入框的自動聚焦
+                            document.activeElement?.blur();
+                            
                             // 綁定數字鍵盤事件
                             const amountInput = document.getElementById('swal-amount');
                             const numPad = document.getElementById('num-pad');
