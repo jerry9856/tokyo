@@ -1188,14 +1188,35 @@
                         cancelButtonColor: '#999',
                         width: '500px',
                         didOpen: () => {
-                            // 防止 iPhone 自動打開日期選單
-                            const dateInput = document.getElementById('swal-date');
-                            const timeInput = document.getElementById('swal-time');
-                            if (dateInput) dateInput.blur();
-                            if (timeInput) timeInput.blur();
-                            
-                            // 移除所有輸入框的自動聚焦
-                            document.activeElement?.blur();
+                            // 防止 iPhone 自動打開日期選單 - 使用延迟的方式彻底阻止
+                            setTimeout(() => {
+                                const dateInput = document.getElementById('swal-date');
+                                const timeInput = document.getElementById('swal-time');
+                                
+                                if (dateInput) {
+                                    dateInput.blur();
+                                    // 暂时禁用，点击时再启用
+                                    dateInput.setAttribute('readonly', 'readonly');
+                                    dateInput.addEventListener('click', function enableEdit() {
+                                        this.removeAttribute('readonly');
+                                        this.removeEventListener('click', enableEdit);
+                                    }, { once: true });
+                                }
+                                
+                                if (timeInput) {
+                                    timeInput.blur();
+                                    timeInput.setAttribute('readonly', 'readonly');
+                                    timeInput.addEventListener('click', function enableEdit() {
+                                        this.removeAttribute('readonly');
+                                        this.removeEventListener('click', enableEdit);
+                                    }, { once: true });
+                                }
+                                
+                                // 移除所有輸入框的自動聚焦
+                                if (document.activeElement) {
+                                    document.activeElement.blur();
+                                }
+                            }, 100);
                             
                             // 綁定數字鍵盤事件
                             const amountInput = document.getElementById('swal-amount');
