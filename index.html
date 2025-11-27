@@ -30,8 +30,9 @@
         <!-- Navigation -->
         <nav class="sticky-nav" :class="navClasses">
             <div class="nav-pill">
-                <a v-for="item in navItems" :key="item.id" :href="item.url || ('#' + item.id)" class="nav-item"
-                    :class="{ active: activeSection === item.id }">
+                <a v-for="item in navItems" :key="item.id" :href="item.url" :target="item.url ? '_blank' : undefined"
+                    @click="item.url ? null : switchTab(item.id, $event)" class="nav-item"
+                    :class="{ active: activeTab === item.id }">
                     {{ item.label }}
                 </a>
             </div>
@@ -61,7 +62,7 @@
 
 
             <!-- Flights -->
-            <section id="flights" class="section-spacer">
+            <section id="flights" class="section-spacer" v-show="activeTab === 'flights'">
                 <div class="section-header">
                     <span class="text-label">TRANSPORTATION</span>
                     <h2 class="section-title">航班與交通</h2>
@@ -124,7 +125,7 @@
             </section>
 
             <!-- Accommodation -->
-            <section id="stay" class="section-spacer">
+            <section id="stay" class="section-spacer" v-show="activeTab === 'stay'">
                 <div class="section-header">
                     <span class="text-label">ACCOMMODATION</span>
                     <h2 class="section-title">住宿安排</h2>
@@ -166,7 +167,7 @@
             </section>
 
             <!-- Itinerary -->
-            <section id="itinerary" class="section-spacer">
+            <section id="itinerary" class="section-spacer" v-show="activeTab === 'itinerary'">
                 <div class="section-header">
                     <span class="text-label">ITINERARY</span>
                     <h2 class="section-title">每日行程</h2>
@@ -202,7 +203,7 @@
             </section>
 
             <!-- References -->
-            <section id="refs" class="section-spacer">
+            <section id="refs" class="section-spacer" v-show="activeTab === 'refs'">
                 <div class="section-header">
                     <span class="text-label">RESOURCES</span>
                     <h2 class="section-title">參考資訊</h2>
@@ -240,13 +241,10 @@
             mixins: [FormMixin],
 
             data: {
-                activeSection: '',
+                activeTab: 'flights',
                 navClasses: {
-                    'nav-hidden': false,
-                    'nav-bottom': false
+                    'nav-bottom': true
                 },
-                isScrolling: null,
-                lastScrollY: 0,
                 hasCurrent: false,
 
                 navItems: [
@@ -412,7 +410,6 @@
                     loadingEl.style.display = 'none';
                 }
 
-                this.setupScrollListener();
                 this.setupObservers();
                 this.updateCurrentTime();
                 this.timeInterval = setInterval(this.updateCurrentTime, 60000);
@@ -431,58 +428,17 @@
 
             methods: {
 
-                setupScrollListener() {
-                    window.addEventListener('scroll', () => {
-                        const currentScrollY = window.scrollY;
-
-                        // Update Active Nav Item
-                        const sections = document.querySelectorAll('section');
-                        let current = '';
-
-                        sections.forEach(section => {
-                            const sectionTop = section.offsetTop;
-                            if (window.pageYOffset >= (sectionTop - 200)) {
-                                current = section.getAttribute('id');
-                            }
-                        });
-
-                        this.activeSection = current;
-
-                        // Nav Position & Visibility Logic
-                        const nav = document.querySelector('.sticky-nav');
+                switchTab(tabId, event) {
+                    event.preventDefault();
+                    this.activeTab = tabId;
+                    // Scroll to header bottom when switching tabs
+                    this.$nextTick(() => {
                         const hero = document.querySelector('.hero');
-                        if (!nav || !hero) return;
-
-                        // Determine scroll direction
-                        const scrollingDown = currentScrollY > this.lastScrollY;
-                        const scrollingUp = currentScrollY < this.lastScrollY;
-
-                        // Show navbar when scrolling up, hide when scrolling down
-                        if (scrollingDown && currentScrollY > 100) {
-                            this.navClasses['nav-hidden'] = true;
-                        } else if (scrollingUp || currentScrollY <= 100) {
-                            this.navClasses['nav-hidden'] = false;
+                        if (hero) {
+                            const heroBottom = hero.offsetTop + hero.offsetHeight;
+                            window.scrollTo({ top: heroBottom, behavior: 'smooth' });
                         }
-
-                        // Clear existing timeout
-                        if (this.isScrolling) {
-                            clearTimeout(this.isScrolling);
-                        }
-
-                        // Set a timeout to show navbar when scrolling stops
-                        this.isScrolling = setTimeout(() => {
-                            if (currentScrollY > 100) {
-                                this.navClasses['nav-hidden'] = false;
-                            }
-                        }, 150);
-
-                        // Update last scroll position
-                        this.lastScrollY = currentScrollY;
-
-                        // Handle Position (Top vs Bottom)
-                        const heroBottom = hero.offsetTop + hero.offsetHeight;
-                        this.navClasses['nav-bottom'] = window.scrollY > heroBottom - 100;
-                    }, { passive: true });
+                    });
                 },
 
                 setupObservers() {
