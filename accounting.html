@@ -1045,13 +1045,17 @@
                                         gap: 8px;
                                         margin-bottom: 12px;
                                     }
+                                    .date-time-grid > div {
+                                        min-width: 0;
+                                    }
                                     @media (max-width: 500px) {
                                         .swal2-input {
                                             font-size: 0.85rem !important;
                                             padding: 0 0.5em !important;
                                         }
                                         .date-time-grid {
-                                            gap: 6px;
+                                            grid-template-columns: 1fr;
+                                            gap: 8px;
                                         }
                                     }
                                     .num-pad-grid {
