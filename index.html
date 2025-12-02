@@ -30,7 +30,7 @@
         <!-- Navigation -->
         <nav class="sticky-nav" :class="navClasses">
             <div class="nav-pill">
-                <a v-for="item in navItems" :key="item.id" :href="item.url" :target="item.url ? '_blank' : undefined"
+                <a v-for="item in navItems" :key="item.id" :href="item.url"
                     @click="item.url ? null : switchTab(item.id, $event)" class="nav-item"
                     :class="{ active: activeTab === item.id }">
                     {{ item.label }}
@@ -109,7 +109,8 @@
                 </div>
 
                 <div class="notice-box notice-info transport-notice">
-                    <svg class="notice-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="notice-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="16" x2="12" y2="12"></line>
                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -250,6 +251,7 @@
                     { id: 'stay', label: '住宿' },
                     { id: 'itinerary', label: '行程' },
                     { id: 'refs', label: '資訊' },
+                    { id: 'disney', label: '迪士尼', url: 'disney.html' },
                     { id: 'weather', label: '天氣', url: 'weather.html' },
                     { id: 'accounting', label: '記帳', url: 'accounting.html' }
                 ],

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>迪士尼專區</title>
+    <link rel="icon" href="icon.png" type="image/png" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .disney-page {
+            background-color: var(--linen);
+            min-height: 100vh;
+            padding-top: 0;
+            padding-bottom: 40px;
+        }
+
+        .disney-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .disney-back-btn {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--accent);
+            transition: all 0.2s ease;
+        }
+
+        .disney-back-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .disney-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .guide-container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .guide-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .guide-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .schedule-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .schedule-item {
+            display: flex;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            align-items: flex-start;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Mickey Highlight Style */
+        .schedule-item.mickey-highlight {
+            background-color: #fffdf6;
+            /* Amber 50 */
+            margin: 0 -24px;
+            /* Expand to full width */
+            padding: 16px 24px;
+            /* Restore padding */
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .schedule-item.mickey-highlight::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ffb300;
+            /* Amber 600 */
+        }
+
+        .schedule-time {
+            font-family: 'SF Mono', 'Roboto Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 65px;
+            color: var(--accent);
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+
+        .schedule-content {
+            flex: 1;
+        }
+
+        .schedule-header {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .schedule-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            line-height: 1.4;
+            margin-right: auto;
+        }
+
+        .schedule-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .tag-parade {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .tag-show {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .tag-fireworks {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tag-castle {
+            background: #e8eaf6;
+            color: #283593;
+        }
+
+        .tag-dpa {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            color: #f57f17;
+            border: 1px solid #fdd835;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .schedule-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .duration {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.03);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .duration::before {
+            content: '⏱';
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Sub Navigation Tabs */
+        .sub-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 4px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .sub-nav-item {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sub-nav-item.active {
+            background: var(--white);
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Bottom Nav Styles */
+        @media (max-width: 768px) {
+            .sub-nav {
+                position: fixed;
+                bottom: 30px;
+                left: 20px;
+                right: 20px;
+                margin-bottom: 0;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+
+            .disney-page {
+                padding-bottom: 100px;
+                /* Add extra space for bottom nav */
+            }
+        }
+
+        /* Tab Content Switching */
+        .guide-card {
+            display: none;
+            /* Hide by default */
+        }
+
+        .guide-card.active-tab {
+            display: block;
+            /* Show when active */
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dynamic Status Styles */
+        .schedule-item {
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Ensure full-width background for active states */
+        .schedule-item.is-current,
+        .schedule-item.is-next {
+            margin: 0 -24px;
+            padding: 16px 24px;
+        }
+
+        /* NOW State */
+        .schedule-item.is-current {
+            background-color: #fef2f2 !important;
+            /* Light red bg, override others */
+        }
+
+        .schedule-item.is-current::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ef4444 !important;
+            /* Red bar */
+            z-index: 1;
+        }
+
+        /* NEXT State */
+        .schedule-item.is-next {
+            background-color: #f0f9ff;
+            /* Light blue bg */
+        }
+
+        .schedule-item.is-next::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3b82f6;
+            /* Blue bar */
+            z-index: 1;
+        }
+
+        /* Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 8px;
+            vertical-align: middle;
+            line-height: 1;
+        }
+
+        .status-badge.now {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+            animation: pulse-badge 2s infinite;
+        }
+
+        .status-badge.next {
+            background: #3b82f6;
+            color: white;
+        }
+
+        @keyframes pulse-badge {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="disney-page">
+    <div class="disney-header">
+        <a href="index.html" class="disney-back-btn" aria-label="Back to Home">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </a>
+        <div class="disney-title">迪士尼專區</div>
+    </div>
+
+    <div class="guide-container">
+        <!-- Sub Navigation Tabs -->
+        <div class="sub-nav">
+            <button class="sub-nav-item active" onclick="switchGuideTab('schedule', this)">時間表</button>
+            <button class="sub-nav-item" onclick="switchGuideTab('strategy', this)">DPA/PP</button>
+            <button class="sub-nav-item" onclick="switchGuideTab('popcorn', this)">爆米花地圖</button>
+        </div>
+
+        <!-- Show/Parade Schedule -->
+        <article id="tab-schedule" class="guide-card active-tab">
+            <h2 class="guide-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                表演 / 遊行時間表
+            </h2>
+            <p
+                style="font-size: 14px; color: var(--text-light); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px dashed var(--sand);">
+                日期：2025/12/08 (一)
+            </p>
+
+            <ul class="schedule-list">
+                <!-- 10:50 Mickey -->
+                <li class="schedule-item mickey-highlight">
+                    <div class="schedule-time">10:50</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">米奇魔法音樂世界</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-show">表演</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 25 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 12:15 Mickey -->
+                <li class="schedule-item mickey-highlight">
+                    <div class="schedule-time">12:15</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">米奇魔法音樂世界</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-show">表演</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 25 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 12:45 Christmas Stories -->
+                <li class="schedule-item">
+                    <div class="schedule-time">12:45</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">玩具奇妙聖誕！</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-parade">遊行</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 45 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 13:40 Mickey -->
+                <li class="schedule-item mickey-highlight">
+                    <div class="schedule-time">13:40</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">米奇魔法音樂世界</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-show">表演</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 25 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 15:25 Harmony in Color -->
+                <li class="schedule-item">
+                    <div class="schedule-time">15:25</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">迪士尼眾彩交融</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-parade">遊行</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 45 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 15:45 Mickey -->
+                <li class="schedule-item mickey-highlight">
+                    <div class="schedule-time">15:45</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">米奇魔法音樂世界</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-show">表演</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 25 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 17:10 Mickey -->
+                <li class="schedule-item mickey-highlight">
+                    <div class="schedule-time">17:10</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">米奇魔法音樂世界</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-show">表演</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 25 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 17:45 Reach for the Stars -->
+                <li class="schedule-item">
+                    <div class="schedule-time">17:45</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">Reach for the Stars</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-castle">城堡秀</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 20 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 19:00 Electrical Parade -->
+                <li class="schedule-item">
+                    <div class="schedule-time">19:00</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">東京迪士尼樂園電子大遊行～夢之光</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-parade">遊行</span>
+                                <span class="tag tag-dpa">DPA</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 45 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- 20:30 Fireworks -->
+                <li class="schedule-item">
+                    <div class="schedule-time">20:30</div>
+                    <div class="schedule-content">
+                        <div class="schedule-header">
+                            <div class="schedule-name">星彩聖誕</div>
+                            <div class="schedule-tags">
+                                <span class="tag tag-fireworks">煙火</span>
+                            </div>
+                        </div>
+                        <div class="schedule-meta">
+                            <span class="duration">約 5 分鐘</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </article>
+
+        <!-- DPA / PP Strategy -->
+        <article id="tab-strategy" class="guide-card">
+            <h2 class="guide-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                DPA / PP 搶票攻略
+            </h2>
+
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+                <div>
+                    <h3
+                        style="font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span
+                            style="background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">1</span>
+                        入園後分工
+                    </h3>
+                    <ul style="margin: 0; padding-left: 32px; color: var(--text); line-height: 1.6;">
+                        <li>一人搶 <strong>美女與野獸</strong> <span class="tag tag-dpa">DPA</span></li>
+                        <li>一人搶 <strong>米奇魔法音樂世界</strong> <span class="tag tag-dpa">DPA</span></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3
+                        style="font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span
+                            style="background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">2</span>
+                        移動策略
+                    </h3>
+                    <p style="margin: 0; padding-left: 32px; color: var(--text);">
+                        往 <strong>小熊維尼獵蜜記</strong> 方向前進排隊
+                    </p>
+                </div>
+
+                <div>
+                    <h3
+                        style="font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <span
+                            style="background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">3</span>
+                        PP 抽票
+                    </h3>
+                    <div style="padding-left: 32px; color: var(--text);">
+                        <p style="margin: 0 0 4px 0;">搶完 DPA 後立即抽 PP：</p>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li>首選：<strong>怪獸電力公司</strong></li>
+                            <li>備案：任一 PP 設施</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Popcorn Map -->
+        <article id="tab-popcorn" class="guide-card">
+            <h2 class="guide-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                爆米花地圖
+            </h2>
+
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <img src="images/IMG_5323.jpg" alt="Popcorn Map 1"
+                    style="width: 100%; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <img src="images/IMG_5324.jpg" alt="Popcorn Map 2"
+                    style="width: 100%; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            </div>
+        </article>
+    </div>
+
+    <script>
+        function switchGuideTab(tabId, clickedButton) {
+            // Update buttons
+            document.querySelectorAll('.sub-nav-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            clickedButton.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.guide-card').forEach(card => {
+                card.classList.remove('active-tab');
+            });
+            document.getElementById('tab-' + tabId).classList.add('active-tab');
+        }
+
+        function updateSchedule() {
+            const now = new Date();
+            // Using system time for hours/minutes
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTimeVal = currentHours * 60 + currentMinutes;
+
+            const items = document.querySelectorAll('.schedule-item');
+            let nextFound = false;
+
+            items.forEach(item => {
+                // Reset
+                item.classList.remove('is-current', 'is-next');
+                const existingBadge = item.querySelector('.status-badge');
+                if (existingBadge) existingBadge.remove();
+
+                // Parse time
+                const timeEl = item.querySelector('.schedule-time');
+                if (!timeEl) return;
+
+                const timeText = timeEl.textContent.trim();
+                const [h, m] = timeText.split(':').map(Number);
+                const itemTimeVal = h * 60 + m;
+
+                // Parse duration
+                const durationEl = item.querySelector('.duration');
+                let duration = 30; // default
+                if (durationEl) {
+                    const match = durationEl.textContent.match(/(\d+)/);
+                    if (match) duration = parseInt(match[1]);
+                }
+
+                const endTimeVal = itemTimeVal + duration;
+
+                // Check status
+                if (currentTimeVal >= itemTimeVal && currentTimeVal < endTimeVal) {
+                    // Happening NOW
+                    item.classList.add('is-current');
+                    const badge = document.createElement('span');
+                    badge.className = 'status-badge now';
+                    badge.textContent = 'NOW';
+                    item.querySelector('.schedule-name').appendChild(badge);
+                } else if (!nextFound && currentTimeVal < itemTimeVal) {
+                    // Next upcoming
+                    item.classList.add('is-next');
+                    const badge = document.createElement('span');
+                    badge.className = 'status-badge next';
+                    badge.textContent = 'NEXT';
+                    item.querySelector('.schedule-name').appendChild(badge);
+                    nextFound = true;
+                }
+            });
+        }
+
+        // Run on load and every minute
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSchedule();
+            setInterval(updateSchedule, 60000);
+        });
+    </script>
+</body>
+
+</html>
