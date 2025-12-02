@@ -14,7 +14,7 @@ export default async function handler(request, response) {
             }
 
             const result = await sql`
-                SELECT id, date, time, item_name, amount, currency, created_at
+                SELECT id, date, time, item_name, amount, currency, payer_name, created_at
                 FROM expenses
                 WHERE user_id = ${userId}
                 ORDER BY date DESC, time DESC
@@ -28,7 +28,7 @@ export default async function handler(request, response) {
 
         // POST /api/tables/expense - 新增費用記錄
         if (request.method === 'POST') {
-            const { userId, date, time, itemName, amount, currency } = request.body;
+            const { userId, date, time, itemName, amount, currency, payerName } = request.body;
 
             if (!userId || !date || !time || !itemName || !amount || !currency) {
                 return response.status(400).json({
@@ -38,9 +38,9 @@ export default async function handler(request, response) {
             }
 
             const result = await sql`
-                INSERT INTO expenses (user_id, date, time, item_name, amount, currency)
-                VALUES (${userId}, ${date}, ${time}, ${itemName}, ${amount}, ${currency})
-                RETURNING id, date, time, item_name, amount, currency, created_at
+                INSERT INTO expenses (user_id, date, time, item_name, amount, currency, payer_name)
+                VALUES (${userId}, ${date}, ${time}, ${itemName}, ${amount}, ${currency}, ${payerName || null})
+                RETURNING id, date, time, item_name, amount, currency, payer_name, created_at
             `;
 
             return response.status(200).json({

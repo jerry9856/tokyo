@@ -1,279 +1,212 @@
-/* ========================================
-   記帳頁面樣式 (Refactored)
-   專注於專業、簡潔與移動端體驗
-   ======================================== */
+/* style/accounting.css - Reconstructed & Enhanced */
 
-/* === 基礎設定 === */
-body {
-    background-color: var(--linen);
-    /* 保留原有的線性漸層作為基底，增加質感 */
-    background: linear-gradient(135deg, #faf8f5 0%, #f5f1eb 100%);
-    min-height: 100vh;
-    padding-top: 40px;
-    /* 為了底部導航欄和 FAB 留出空間 */
-    padding-bottom: 120px; 
-}
-
-/* === 主容器 === */
 .accounting-container {
-    max-width: 600px; /* 縮窄寬度以獲得更好的閱讀體驗，類似收據或清單 */
+    max-width: 600px;
     margin: 0 auto;
-    padding: 0 20px;
-    width: 100%;
-    position: relative;
+    padding: 20px;
+    padding-bottom: 80px; /* Space for FAB */
 }
 
-/* === 頁首區域 === */
 .user-info {
-    text-align: center;
-    margin-bottom: 32px;
-    animation: fadeInDown 0.6s ease-out;
-}
-
-.user-info h1 {
-    font-size: 1.8rem;
-    margin: 0 0 8px 0;
-    color: var(--accent);
-    font-weight: 700;
-    letter-spacing: 0.05em;
-}
-
-/* 控制按鈕區 */
-.header-controls {
+    margin-bottom: 24px;
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 32px;
-    animation: fadeIn 0.6s ease-out 0.2s backwards;
-}
-
-.refresh-btn,
-.logout-btn {
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid var(--sand);
-    border-radius: 999px;
-    color: var(--accent);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: var(--shadow-sm);
-    text-decoration: none;
 }
 
-.refresh-btn:hover,
-.logout-btn:hover {
-    background: var(--white);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+.logout-btn {
+    background: var(--shell);
+    border: 1px solid var(--sand);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.header-controls {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 6px 12px;
+    padding-right: 28px;
+    border-radius: 100px;
+    border: 1px solid var(--sand);
+    background-color: var(--white);
+    color: var(--accent);
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A2F1E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    transition: all 0.2s;
+}
+
+.filter-select:hover {
     border-color: var(--accent);
 }
 
-.refresh-btn:active,
-.logout-btn:active {
-    transform: translateY(0);
+.filter-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(74, 47, 30, 0.1);
 }
 
-.refresh-btn svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.5s ease;
+.refresh-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 8px;
 }
 
 .refresh-btn.refreshing svg {
     animation: spin 1s linear infinite;
 }
 
-/* === 每日記帳卡片 === */
 .day-group {
     background: var(--white);
-    border-radius: 24px;
-    margin-bottom: 24px;
+    border-radius: 16px;
     box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(217, 207, 199, 0.4);
+    margin-bottom: 24px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: fadeInUp 0.5s ease backwards;
+    border: 1px solid rgba(0,0,0,0.03);
 }
 
-.day-group:hover {
-    box-shadow: var(--shadow-md);
-    border-color: rgba(217, 207, 199, 0.8);
-}
-
-/* 逐個顯示動畫延遲 */
-.day-group:nth-child(1) { animation-delay: 0.1s; }
-.day-group:nth-child(2) { animation-delay: 0.2s; }
-.day-group:nth-child(3) { animation-delay: 0.3s; }
-.day-group:nth-child(4) { animation-delay: 0.4s; }
-
-/* 日期標題 */
 .day-header {
-    padding: 16px 24px;
-    background: linear-gradient(to bottom, #fafbfb, #ffffff);
-    border-bottom: 1px solid var(--linen);
+    background: var(--shell);
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--sand);
 }
 
 .day-date {
     display: flex;
     align-items: baseline;
-    gap: 10px;
+    gap: 8px;
 }
 
 .day-date-main {
-    font-size: 1.15rem;
     font-weight: 700;
     color: var(--accent);
-    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 1.05rem;
 }
 
 .day-date-weekday {
-    font-size: 0.9rem;
-    color: #999;
-    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--text-light);
 }
 
 .day-count {
-    font-size: 0.75rem;
-    color: #aaa;
-    font-weight: 600;
-    background: var(--linen);
-    padding: 4px 10px;
-    border-radius: 99px;
-    border: 1px solid rgba(0,0,0,0.02);
+    font-size: 0.8rem;
+    color: var(--text-light);
+    background: rgba(255,255,255,0.5);
+    padding: 2px 8px;
+    border-radius: 12px;
 }
 
-/* === 記帳項目列表 === */
 .expense-items {
-    display: flex;
-    flex-direction: column;
+    padding: 0;
 }
 
 .expense-item {
     display: flex;
     justify-content: space-between;
-    align-items: stretch;
-    padding: 16px 24px;
+    align-items: center;
+    padding: 16px;
     border-bottom: 1px solid var(--linen);
-    background: var(--white);
-    transition: background-color 0.2s ease;
-    position: relative;
-    min-height: 72px; /* 增加點擊區域 */
 }
 
 .expense-item:last-child {
     border-bottom: none;
 }
 
-.expense-item:active {
-    background-color: #faf8f5;
-}
-
-/* 左側資訊區 */
 .expense-info {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    flex: 1;
-    min-width: 0;
-    padding-right: 16px;
-}
-
-.expense-name {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.4;
+    align-items: flex-start;
+    gap: 12px;
 }
 
 .expense-time {
-    font-size: 0.85rem;
-    color: #999;
-    font-family: 'SF Mono', 'Monaco', monospace;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-family: monospace;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 2px;
+    min-width: 45px;
 }
 
-.expense-time::before {
-    content: '';
-    display: block;
-    width: 6px;
-    height: 6px;
-    background-color: var(--sand);
-    border-radius: 50%;
+.expense-name {
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
 }
 
-/* 右側金額與操作區 */
 .expense-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .expense-amount {
-    font-family: 'SF Mono', 'Menlo', 'Cascadia Code', monospace;
     font-weight: 600;
     font-size: 1.1rem;
     text-align: right;
     white-space: nowrap;
-    letter-spacing: -0.5px;
 }
 
 .currency-twd {
-    color: #2e7d32;
+    color: var(--text-light);
+    font-size: 0.95rem;
 }
 
 .currency-jpy {
-    color: #1565c0;
+    color: var(--accent);
 }
 
-/* 刪除按鈕 */
 .delete-btn {
     background: transparent;
     border: none;
-    color: #e0e0e0;
-    width: 36px;
-    height: 36px;
+    color: var(--text-lighter);
+    cursor: pointer;
+    padding: 4px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-right: -8px; /* 視覺上稍微向右修正 */
 }
 
 .delete-btn:hover {
-    color: #e53e3e;
-    background: rgba(229, 62, 62, 0.08);
+    color: var(--danger);
 }
 
-.delete-btn:active {
-    transform: scale(0.9);
-}
-
-/* === 單日總計 Footer === */
 .day-summary {
-    background: #fcfbf9;
-    padding: 16px 24px;
+    background: var(--linen);
+    padding: 12px 16px;
     display: flex;
     justify-content: flex-end;
     gap: 24px;
-    border-top: 1px solid rgba(217, 207, 199, 0.3);
+    border-top: 1px solid var(--sand);
 }
 
 .summary-item {
@@ -283,231 +216,91 @@ body {
 }
 
 .summary-label {
-    font-size: 0.75rem;
-    color: #999;
+    font-size: 0.8rem;
+    color: var(--text-light);
     text-transform: uppercase;
-    font-weight: 600;
     letter-spacing: 0.05em;
 }
 
 .summary-amount {
-    font-family: 'SF Mono', monospace;
     font-weight: 700;
     font-size: 1rem;
 }
 
-.summary-amount.jpy { color: #1565c0; }
-.summary-amount.twd { color: #2e7d32; }
+.summary-amount.jpy {
+    color: var(--accent);
+}
 
-/* === 浮動新增按鈕 (FAB) === */
+.summary-amount.twd {
+    color: var(--text);
+}
+
 .add-expense-btn {
     position: fixed;
     bottom: 100px;
     right: 24px;
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: var(--accent);
-    color: var(--white);
+    color: white;
     border: none;
-    box-shadow: 0 4px 20px rgba(74, 47, 30, 0.4);
-    font-size: 28px;
-    font-weight: 300;
+    box-shadow: var(--shadow-lg);
+    font-size: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 50;
+    transition: transform 0.2s;
+    z-index: 90;
 }
 
 .add-expense-btn:hover {
-    transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 8px 28px rgba(74, 47, 30, 0.5);
-    background: linear-gradient(135deg, #4A2F1E 0%, #6d4c35 100%);
+    transform: scale(1.1);
+    background: #5d3a26;
 }
 
-.add-expense-btn:active {
-    transform: scale(0.95);
-}
-
-/* === 空狀態與載入中 === */
 .empty-state {
-    padding: 80px 20px;
+    padding: 48px 20px;
     text-align: center;
-    color: #aaa;
-    font-size: 0.95rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Payer Styles */
+.expense-details {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
+    gap: 4px;
 }
 
-.empty-state::before {
-    content: '📝';
-    font-size: 2.5rem;
-    opacity: 0.5;
-    margin-bottom: 8px;
+.expense-payer {
+    font-size: 0.75rem;
+    line-height: 1;
 }
 
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    gap: 16px;
+.payer-badge {
+    background-color: var(--shell);
+    border: 1px solid var(--sand);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--text-light);
+    display: inline-block;
 }
 
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--sand);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-.loading-text {
-    font-size: 0.9rem;
-    color: var(--accent);
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-/* === SweetAlert2 自定義樣式 (保留以維持一致性) === */
-.swal2-popup {
-    border-radius: 24px !important;
-    padding: 24px !important;
-    font-family: 'Noto Sans TC', sans-serif !important;
-}
-
-.swal2-input,
-.swal2-select {
-    border-radius: 12px !important;
-    border: 1px solid var(--sand) !important;
-}
-
-.swal2-input:focus {
-    box-shadow: 0 0 0 2px var(--accent-medium) !important;
-    border-color: var(--accent) !important;
-}
-
-.swal2-confirm {
-    background: var(--accent) !important;
-    border-radius: 12px !important;
-    padding: 12px 32px !important;
-    font-weight: 600 !important;
-}
-
-.swal2-cancel {
-    border-radius: 12px !important;
-    padding: 12px 32px !important;
-    font-weight: 600 !important;
-    background: var(--linen) !important;
-    color: var(--text) !important;
-}
-
-/* === 動畫關鍵影格 === */
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* === 響應式設計 (Mobile Optimized) === */
-@media (max-width: 480px) {
+@media (max-width: 500px) {
     .accounting-container {
-        padding: 0 16px;
-    }
-
-    .user-info h1 {
-        font-size: 1.5rem;
-    }
-    
-    .day-header {
-        padding: 14px 16px;
-    }
-    
-    .day-date-main {
-        font-size: 1.05rem;
+        padding: 16px 12px;
+        padding-bottom: 80px;
     }
     
     .expense-item {
-        padding: 14px 16px;
-    }
-    
-    .expense-info {
-        padding-right: 12px;
-    }
-    
-    .expense-amount {
-        font-size: 1rem;
+        padding: 12px;
     }
     
     .day-summary {
-        padding: 14px 16px;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-    
-    .summary-item {
-        flex: 1 0 auto;
-        justify-content: flex-end;
-    }
-    
-    /* 調整 FAB 在手機上的位置 */
-    .add-expense-btn {
-        bottom: 90px;
-        right: 20px;
-        width: 56px;
-        height: 56px;
-        font-size: 24px;
-    }
-}
-
-/* 針對觸控裝置的優化 */
-@media (hover: none) and (pointer: coarse) {
-    .delete-btn {
-        width: 44px;
-        height: 44px; /* 加大點擊範圍 */
-        opacity: 1;
-        color: #ccc;
-    }
-    
-    .expense-item:active {
-        background-color: var(--linen);
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-end;
     }
 }

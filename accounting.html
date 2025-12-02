@@ -37,6 +37,19 @@
             </div>
 
             <div class="header-controls">
+                <div class="filters">
+                    <select v-model="filterCurrency" class="filter-select">
+                        <option value="ALL">所有幣別</option>
+                        <option value="JPY">🇯🇵 日圓</option>
+                        <option value="TWD">🇹🇼 台幣</option>
+                    </select>
+                    <select v-model="filterPayer" class="filter-select">
+                        <option value="ALL">所有代付人</option>
+                        <option v-for="payer in availablePayers" :key="payer" :value="payer">
+                            {{ payer }}
+                        </option>
+                    </select>
+                </div>
                 <button class="refresh-btn" :class="{ refreshing: isRefreshing }" @click="refreshExpenses"
                     title="重新載入記帳資料">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -66,7 +79,12 @@
                         <div v-for="expense in group.items" :key="expense.id" class="expense-item">
                             <div class="expense-info">
                                 <div class="expense-time">{{ formatTime(expense.time) }}</div>
-                                <div class="expense-name">{{ expense.item_name }}</div>
+                                <div class="expense-details">
+                                    <div class="expense-name">{{ expense.item_name }}</div>
+                                    <div v-if="expense.payer_name" class="expense-payer">
+                                        <span class="payer-badge">代付: {{ expense.payer_name }}</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="expense-actions">
                                 <div class="expense-amount"
@@ -142,8 +160,11 @@
                     time: '',
                     itemName: '',
                     amount: '',
-                    currency: 'JPY'
+                    currency: 'JPY',
+                    payerName: ''
                 },
+                filterCurrency: 'ALL',
+                filterPayer: 'ALL',
                 // 快取相關
                 cacheKey: 'accounting_expenses_cache',
                 cacheExpireTime: 5 * 60 * 1000, // 快取過期時間：5分鐘
@@ -160,8 +181,19 @@
                 expensesByDate() {
                     const grouped = {};
 
+                    // 過濾與分組
+                    let filtered = this.expenses;
+
+                    if (this.filterCurrency !== 'ALL') {
+                        filtered = filtered.filter(e => e.currency === this.filterCurrency);
+                    }
+
+                    if (this.filterPayer !== 'ALL') {
+                        filtered = filtered.filter(e => e.payer_name === this.filterPayer);
+                    }
+
                     // 按日期分組
-                    this.expenses.forEach(expense => {
+                    filtered.forEach(expense => {
                         const date = expense.date;
                         if (!grouped[date]) {
                             grouped[date] = {
@@ -188,6 +220,16 @@
                     });
 
                     return result;
+                },
+                /**
+                 * 可選的代付人列表（從歷史紀錄提取）
+                 */
+                availablePayers() {
+                    const payers = new Set();
+                    this.expenses.forEach(e => {
+                        if (e.payer_name) payers.add(e.payer_name);
+                    });
+                    return Array.from(payers);
                 }
             },
             methods: {
@@ -442,6 +484,14 @@
                                 <input id="swal-name" type="text" class="swal2-input" placeholder="例如：午餐、車票">
                             </div>
 
+                            <div style="margin-bottom: 4px;">
+                                <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">代付人 (選填)</label>
+                                <input id="swal-payer" type="text" class="swal2-input" list="payer-list" placeholder="誰付的錢？" value="${this.form.payerName || ''}">
+                                <datalist id="payer-list">
+                                    ${this.availablePayers.map(p => `<option value="${p}">`).join('')}
+                                </datalist>
+                            </div>
+
                                 <div style="margin-bottom: 4px;">
                                 <label style="display: block; margin-bottom: 4px; font-weight: 500; color: var(--accent); font-size: 0.9rem;">幣別</label>
                                 <div class="currency-group">
@@ -549,6 +599,7 @@
                             const time = document.getElementById('swal-time').value;
                             const name = document.getElementById('swal-name').value;
                             const amount = document.getElementById('swal-amount').value;
+                            const payerName = document.getElementById('swal-payer').value;
                             // 獲取選中的 radio value
                             const currencyEl = document.querySelector('input[name="swal-currency"]:checked');
                             const currency = currencyEl ? currencyEl.value : 'JPY';
@@ -558,7 +609,7 @@
                                 return false;
                             }
 
-                            return { date, time, name, amount, currency };
+                            return { date, time, name, amount, currency, payerName };
                         }
                     });
 
@@ -568,6 +619,7 @@
                         this.form.itemName = formValues.name;
                         this.form.amount = formValues.amount;
                         this.form.currency = formValues.currency;
+                        this.form.payerName = formValues.payerName;
                         await this.addExpense();
                     }
                 },
@@ -589,7 +641,8 @@
                             this.form.time,
                             this.form.itemName,
                             this.form.amount,
-                            this.form.currency
+                            this.form.currency,
+                            this.form.payerName
                         );
 
                         if (result.success) {
@@ -597,6 +650,7 @@
                             await this.loadExpenses(true);
                             this.form.itemName = '';
                             this.form.amount = '';
+                            // 這裡不清除 payerName，方便下次繼續使用
                             this.setDefaultDateTime();
 
                             // 顯示成功訊息

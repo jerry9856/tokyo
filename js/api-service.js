@@ -52,8 +52,8 @@ async function apiCall(endpoint, method = 'GET', data = null) {
  */
 const ExpenseAPI = {
     // 新增費用記錄
-    create: (userId, date, time, itemName, amount, currency) =>
-        apiCall('/api/tables/expense', 'POST', { userId, date, time, itemName, amount, currency }),
+    create: (userId, date, time, itemName, amount, currency, payerName) =>
+        apiCall('/api/tables/expense', 'POST', { userId, date, time, itemName, amount, currency, payerName }),
 
     // 取得費用記錄列表
     getAll: (userId) =>
