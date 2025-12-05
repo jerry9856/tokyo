@@ -659,6 +659,54 @@
                 transform: translate(-50%, -50%) rotate(180deg);
             }
         }
+
+        /* Current Time Indicator */
+        .timeline-item.current .timeline-marker {
+            background: #C53030;
+            border-color: #C53030;
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-item.current .timeline-time {
+            color: #C53030;
+            font-weight: 700;
+        }
+
+        .timeline-item.current::after {
+            content: 'NOW';
+            position: absolute;
+            right: 0;
+            top: 4px;
+            background: #C53030;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(197, 48, 48, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(197, 48, 48, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 48, 48, 0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -1260,6 +1308,64 @@
         document.querySelectorAll('.day-card, .flight-card').forEach(card => {
             observer.observe(card);
         });
+
+        // Current Time Indicator Logic
+        const updateCurrentTime = () => {
+            const now = new Date();
+            // Uncomment to test specific time: 
+            // const now = new Date('2025-12-04T19:30:00'); 
+
+            const currentMonth = now.getMonth() + 1;
+            const currentDay = now.getDate();
+            const currentYear = now.getFullYear();
+
+            document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('current'));
+
+            document.querySelectorAll('.day-card').forEach(card => {
+                // Parse Date: "12/04" or "12 / 04"
+                const dateMeta = card.querySelector('.day-meta span:first-child');
+                if (!dateMeta) return;
+
+                const dateParts = dateMeta.textContent.split('/').map(s => parseInt(s.trim()));
+                if (dateParts.length !== 2) return;
+
+                const [month, day] = dateParts;
+
+                // Check if it's today (Assuming year matches or ignoring year for recurring)
+                // Here we strictly check Month and Day. 
+                if (currentMonth === month && currentDay === day) {
+                    const items = Array.from(card.querySelectorAll('.timeline-item'));
+                    let activeItem = null;
+
+                    for (let i = 0; i < items.length; i++) {
+                        const item = items[i];
+                        const timeEl = item.querySelector('.timeline-time');
+                        if (!timeEl) continue;
+
+                        const [hours, minutes] = timeEl.textContent.trim().split(':').map(Number);
+                        const itemTime = new Date(now);
+                        itemTime.setHours(hours, minutes, 0, 0);
+
+                        if (now >= itemTime) {
+                            activeItem = item;
+                        } else {
+                            // If we find a future item, the previous one was the current one.
+                            // Since we update activeItem as we go, we can just break or continue.
+                            // But actually, we want the *latest* item that has passed.
+                            break;
+                        }
+                    }
+
+                    if (activeItem) {
+                        activeItem.classList.add('current');
+                    }
+                }
+            });
+        };
+
+        // Update every minute
+        setInterval(updateCurrentTime, 60000);
+        updateCurrentTime();
     </script>
 </body>
 
